@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { auth, db } from '../firebase';
 import { signInAnonymously } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
+import { useTranslation } from 'react-i18next';
 
 export default function Login() {
+    const { t, i18n } = useTranslation();
     const [name, setName] = useState('');
     const [role, setRole] = useState('farmer');
+    const [entityType, setEntityType] = useState('retailer');
     const [location, setLocation] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -22,11 +25,13 @@ export default function Login() {
         try {
             const { user } = await signInAnonymously(auth);
 
-            // Auto-create user document in Firestore
+            // Create user document with entity type for buyers
             await setDoc(doc(db, 'users', user.uid), {
                 name,
                 role,
                 location,
+                entityType: role === 'buyer' ? entityType : null,
+                language: i18n.language,
                 verified: true,
                 createdAt: new Date().toISOString()
             });
@@ -42,34 +47,14 @@ export default function Login() {
     return (
         <div className="auth-page">
             <div className="auth-card glass-card">
-                <h1>Welcome to Thulir</h1>
-                <p className="subtitle">Digital Marketplace for Farmers</p>
+                <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+                    <h1 style={{ fontSize: '2.5rem', marginBottom: '8px' }}>{t('welcome')}</h1>
+                    <p style={{ color: 'var(--text-muted)' }}>{t('subtitle')}</p>
+                </div>
 
                 <form onSubmit={handleLogin}>
                     <div className="form-group">
-                        <label>Full Name</label>
-                        <input
-                            type="text"
-                            placeholder="e.g. Arpitha Shri"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Location</label>
-                        <input
-                            type="text"
-                            placeholder="e.g. Coimbatore, Tamil Nadu"
-                            value={location}
-                            onChange={(e) => setLocation(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label>I want to join as</label>
+                        <label>{t('login_as')}</label>
                         <div className="role-selector">
                             <label className="role-option">
                                 <input
@@ -81,7 +66,7 @@ export default function Login() {
                                 />
                                 <div className="role-card">
                                     <span className="icon">👨‍🌾</span>
-                                    <span>Farmer</span>
+                                    <span>{t('farmer')}</span>
                                 </div>
                             </label>
 
@@ -94,17 +79,51 @@ export default function Login() {
                                     onChange={(e) => setRole(e.target.value)}
                                 />
                                 <div className="role-card">
-                                    <span className="icon">🛒</span>
-                                    <span>Buyer</span>
+                                    <span className="icon">�</span>
+                                    <span>{t('buyer')}</span>
                                 </div>
                             </label>
                         </div>
                     </div>
 
+                    {role === 'buyer' && (
+                        <div className="form-group animate-slide-down">
+                            <label>{t('entity_type')}</label>
+                            <select value={entityType} onChange={(e) => setEntityType(e.target.value)}>
+                                <option value="retailer">{t('retailer')}</option>
+                                <option value="cooperative">{t('cooperative')}</option>
+                                <option value="institutional">{t('institutional')}</option>
+                                <option value="community">{t('community')}</option>
+                            </select>
+                        </div>
+                    )}
+
+                    <div className="form-group">
+                        <label>{t('name_label')}</label>
+                        <input
+                            type="text"
+                            placeholder={t('name_label')}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>{t('location_label')}</label>
+                        <input
+                            type="text"
+                            placeholder="e.g. Coimbatore, Tamil Nadu"
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
+                            required
+                        />
+                    </div>
+
                     {error && <p style={{ color: 'var(--error)', marginBottom: '16px', fontSize: '0.875rem' }}>{error}</p>}
 
                     <button className="btn btn-primary" type="submit" disabled={loading}>
-                        {loading ? 'Entering...' : 'Join Marketplace'}
+                        {loading ? t('entering') : t('join_btn')}
                     </button>
                 </form>
             </div>

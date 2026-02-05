@@ -1,33 +1,156 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { db, auth } from '../firebase';
+import { collection, query, where, onSnapshot, doc, deleteDoc, updateDoc, orderBy } from 'firebase/firestore';
+import { useTranslation } from 'react-i18next';
+import CropListingForm from './CropListingForm';
 
 export default function FarmerDashboard({ userData }) {
-    return (
-        <div className="dashboard-content">
-            <header className="nav">
-                <h2>Farmer Portal</h2>
-                <span>Harvest Season 2026</span>
-            </header>
+    const { t } = useTranslation();
+    const [listings, setListings] = useState([]);
+    const [demands, setDemands] = useState([]);
+    const [showForm, setShowForm] = useState(false);
+    const [activeTab, setActiveTab] = useState('inventory'); // 'inventory' or 'demands'
 
-            <div className="grid">
-                <div className="stat-card glass-card">
-                    <div className="stat-label">Active Listings</div>
-                    <div className="stat-value">12</div>
+    useEffect(() => {
+        if (!auth.currentUser) return;
+
+        // Fetch My Listings
+        const qList = query(
+            collection(db, 'listings'),
+            where('farmerId', '==', auth.currentUser.uid)
+        );
+        const unsubList = onSnapshot(qList, (snap) => {
+            setListings(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        });
+
+        // Fetch Global Buyer Demands
+        const qDemands = query(collection(db, 'demands'), orderBy('createdAt', 'desc'));
+        const unsubDemands = onSnapshot(qDemands, (snap) => {
+            setDemands(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        });
+
+        return () => { unsubList(); unsubDemands(); };
+    }, []);
+
+    const handleDelete = async (id) => {
+        if (window.confirm("Remove this listing?")) {
+            await deleteDoc(doc(db, 'listings', id));
+        }
+    };
+
+    const toggleStatus = async (item) => {
+        const newStatus = item.status === 'available' ? 'sold' : 'available';
+        await updateDoc(doc(db, 'listings', item.id), { status: newStatus });
+    };
+
+    return (
+        <div className="farmer-portal">
+            <div className="portal-header">
+                <div className="portal-title">
+                    <h2 style={{ fontSize: '2rem' }}>{t('farmer')} Portal</h2>
+                    <p style={{ color: 'var(--text-muted)' }}>Manage harvest and track market needs</p>
                 </div>
-                <div className="stat-card glass-card">
-                    <div className="stat-label">Recent Sales</div>
-                    <div className="stat-value">₹45,200</div>
-                </div>
-                <div className="stat-card glass-card">
-                    <div className="stat-label">Market Reach</div>
-                    <div className="stat-value">Top 10%</div>
+                <div className="header-actions">
+                    <div className="tab-switcher glass-card">
+                        <button className={activeTab === 'inventory' ? 'active' : ''} onClick={() => setActiveTab('inventory')}>📦 My Inventory</button>
+                        <button className={activeTab === 'demands' ? 'active' : ''} onClick={() => setActiveTab('demands')}>📢 Buyer Demands</button>
+                    </div>
+                    <button className="btn btn-primary" onClick={() => setShowForm(!showForm)} style={{ width: 'auto', padding: '12px 24px' }}>
+                        {showForm ? '← Close' : `➕ ${t('post_crop')}`}
+                    </button>
                 </div>
             </div>
 
-            <div style={{ marginTop: '32px' }}>
-                <h3 style={{ marginBottom: '16px' }}>Manage Your Crops</h3>
-                <div className="glass-card" style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                    No active listings yet. Start selling your fresh produce today!
+            {/* Quick Stats */}
+            <div className="stats-banner">
+                <div className="stat-pill glass-card">
+                    <span className="pill-icon">💰</span>
+                    <div className="pill-text">
+                        <span className="pill-label">Total Earnings</span>
+                        <span className="pill-value">₹45,200</span>
+                    </div>
                 </div>
+                <div className="stat-pill glass-card">
+                    <span className="pill-icon">📦</span>
+                    <div className="pill-text">
+                        <span className="pill-label">Active Listings</span>
+                        <span className="pill-value">{listings.length}</span>
+                    </div>
+                </div>
+                <div className="stat-pill glass-card">
+                    <span className="pill-icon">🔥</span>
+                    <div className="pill-text">
+                        <span className="pill-label">Open Demands</span>
+                        <span className="pill-value">{demands.length}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="portal-body">
+                {showForm && (
+                    <div className="form-section animate-slide-down" style={{ marginBottom: '40px' }}>
+                        <CropListingForm onComplete={() => setShowForm(false)} />
+                    </div>
+                )}
+
+                {activeTab === 'inventory' ? (
+                    <div className="listings-section glass-card">
+                        <div className="card-header">
+                            <h3 style={{ fontFamily: 'Outfit' }}>📜 {t('my_listings')}</h3>
+                        </div>
+                        {listings.length === 0 ? (
+                            <div style={{ padding: '60px', textAlign: 'center' }}><p>{t('no_listings')}</p></div>
+                        ) : (
+                            <div className="listings-list">
+                                {listings.map(item => (
+                                    <div key={item.id} className="listing-row">
+                                        <div className="item-info"><h4>{item.cropType}</h4><p>{item.quantity} • {t(item.grade)}</p></div>
+                                        <div className="item-meta">
+                                            <div className="item-price"><strong>{item.expectedPrice}</strong></div>
+                                            <span className={`status-badge ${item.status}`}>{t(item.status)}</span>
+                                        </div>
+                                        <div className="item-actions">
+                                            <button onClick={() => toggleStatus(item)} className="btn-icon">
+                                                {item.status === 'available' ? '✅' : '🔄'}
+                                            </button>
+                                            <button onClick={() => handleDelete(item.id)} className="btn-icon delete">🗑️</button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div className="demands-section glass-card">
+                        <div className="card-header">
+                            <h3 style={{ fontFamily: 'Outfit' }}>📢 {t('view_demand')}</h3>
+                        </div>
+                        {demands.length === 0 ? (
+                            <div style={{ padding: '60px', textAlign: 'center' }}><p>{t('no_demands')}</p></div>
+                        ) : (
+                            <div className="listings-list">
+                                {demands.map(item => (
+                                    <div key={item.id} className="listing-row demand-row">
+                                        <div className="item-info">
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <h4>{item.cropType}</h4>
+                                                {item.urgency === 'urgent' && <span className="urgent-badge">URGENT</span>}
+                                            </div>
+                                            <p>{item.quantity} • Needed by <strong>{item.buyerName}</strong> ({t(item.entityType || 'buyer')})</p>
+                                        </div>
+                                        <div className="item-meta">
+                                            <div className="item-price"><strong>Target: {item.targetPrice}</strong></div>
+                                            <span className="location-tag">📍 {item.location}</span>
+                                        </div>
+                                        <div className="item-actions">
+                                            <button className="btn-buy-mini" style={{ background: 'var(--primary)', color: 'white', border: 'none' }}>Offer</button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );

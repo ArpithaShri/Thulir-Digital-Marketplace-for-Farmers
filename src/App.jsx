@@ -4,6 +4,9 @@ import { onAuthStateChanged } from 'firebase/auth';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 
+import VoiceAssistant from './components/VoiceAssistant';
+import LanguageSelector from './components/LanguageSelector';
+
 function App() {
   const [user, setUser] = useState(null);
   const [initializing, setInitializing] = useState(true);
@@ -27,11 +30,13 @@ function App() {
 
   return (
     <div className="app-container">
+      <LanguageSelector />
       {user ? (
         <Dashboard user={user} />
       ) : (
         <Login />
       )}
+      <VoiceAssistant />
     </div>
   );
 }
