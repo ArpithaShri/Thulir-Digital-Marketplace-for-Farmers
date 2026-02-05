@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { db } from '../firebase';
-import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
+import { db, auth } from '../firebase';
+import { collection, query, onSnapshot, orderBy, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
 import DemandPostingForm from './DemandPostingForm';
 
@@ -21,6 +21,8 @@ export default function BuyerDashboard({ userData }) {
         grade: ''
     });
 
+    const [bidInputs, setBidInputs] = useState({}); // { listingId: amount }
+
     useEffect(() => {
         const q = query(collection(db, 'listings'), orderBy('createdAt', 'desc'));
         const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -28,6 +30,35 @@ export default function BuyerDashboard({ userData }) {
         });
         return () => unsubscribe();
     }, []);
+
+    const handleBid = async (listingId, currentHighest, bidValue) => {
+        const amount = parseFloat(bidValue);
+        if (isNaN(amount) || amount <= currentHighest) {
+            alert(`Bid must be higher than ₹${currentHighest}`);
+            return;
+        }
+
+        try {
+            // Update listing with new highest bid
+            await updateDoc(doc(db, 'listings', listingId), {
+                highestBid: amount,
+                highestBidder: userData.name
+            });
+
+            // Log the bid in subcollection
+            await addDoc(collection(db, 'listings', listingId, 'bids'), {
+                bidderId: auth.currentUser.uid,
+                bidderName: userData.name,
+                bidAmount: amount,
+                timestamp: serverTimestamp()
+            });
+
+            alert("Bid placed successfully!");
+        } catch (err) {
+            console.error("Bidding error:", err);
+            alert("Failed to place bid.");
+        }
+    };
 
     const applySearch = () => {
         setActiveFilters({
@@ -126,7 +157,10 @@ export default function BuyerDashboard({ userData }) {
                                 {filteredListings.map(item => (
                                     <div key={item.id} className="market-card">
                                         <div className="market-card-header">
-                                            <span className="crop-tag">{item.cropType}</span>
+                                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                <span className="crop-tag">{item.cropType}</span>
+                                                {item.auctionActive && <span className="urgent-badge" style={{ background: '#fef3c7', color: '#d97706' }}>LIVE 🔨</span>}
+                                            </div>
                                             <span className={`grade-tag ${item.grade}`}>{t(item.grade).split(' ')[0]}</span>
                                         </div>
                                         <div className="market-card-body">
@@ -135,19 +169,40 @@ export default function BuyerDashboard({ userData }) {
                                                 <span>available</span>
                                             </div>
                                             <div className="price-info">
-                                                <span className="price-label">Rate Offer</span>
-                                                <span className="price-value">{item.expectedPrice}</span>
+                                                <span className="price-label">{item.auctionActive ? 'Current Bid' : 'Rate Offer'}</span>
+                                                <span className="price-value">₹{item.auctionActive ? item.highestBid : item.expectedPrice}</span>
                                             </div>
                                         </div>
-                                        <div className="market-card-footer">
-                                            <div className="farmer-info">
-                                                <div className="avatar-micro">{item.farmerName.charAt(0)}</div>
-                                                <div className="farmer-details">
-                                                    <span className="name">{item.farmerName}</span>
-                                                    <span className="loc">📍 {item.location || 'Rural India'}</span>
+                                        <div className="market-card-footer" style={{ flexDirection: item.auctionActive ? 'column' : 'row', gap: '12px', alignItems: 'stretch' }}>
+                                            {item.auctionActive ? (
+                                                <div style={{ display: 'flex', gap: '8px' }}>
+                                                    <input
+                                                        type="number"
+                                                        placeholder={`Min ₹${(item.highestBid || 0) + 1}`}
+                                                        value={bidInputs[item.id] || ''}
+                                                        onChange={(e) => setBidInputs({ ...bidInputs, [item.id]: e.target.value })}
+                                                        style={{ flex: 1, padding: '8px', fontSize: '0.9rem' }}
+                                                    />
+                                                    <button
+                                                        className="btn-buy-mini"
+                                                        style={{ background: 'var(--secondary)', color: 'white', borderColor: 'var(--secondary)' }}
+                                                        onClick={() => handleBid(item.id, item.highestBid, bidInputs[item.id])}
+                                                    >
+                                                        Place Bid
+                                                    </button>
                                                 </div>
-                                            </div>
-                                            <button className="btn-buy-mini">Contact Farmer</button>
+                                            ) : (
+                                                <>
+                                                    <div className="farmer-info">
+                                                        <div className="avatar-micro">{item.farmerName.charAt(0)}</div>
+                                                        <div className="farmer-details">
+                                                            <span className="name">{item.farmerName}</span>
+                                                            <span className="loc">📍 {item.location || 'Rural India'}</span>
+                                                        </div>
+                                                    </div>
+                                                    <button className="btn-buy-mini">Contact Farmer</button>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                 ))}

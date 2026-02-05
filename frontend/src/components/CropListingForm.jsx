@@ -3,26 +3,33 @@ import { db, auth } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
 
-export default function CropListingForm({ onComplete }) {
+export default function CropListingForm({ userData, onComplete }) {
     const { t } = useTranslation();
     const [crop, setCrop] = useState('');
     const [quantity, setQuantity] = useState('');
     const [grade, setGrade] = useState('grade_a');
     const [price, setPrice] = useState('');
     const [location, setLocation] = useState(userData?.location || '');
+    const [isAuction, setIsAuction] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+
+        const numericPrice = parseFloat(price.replace(/[^0-9.]/g, ''));
+
         try {
             await addDoc(collection(db, 'listings'), {
                 farmerId: auth.currentUser.uid,
-                farmerName: auth.currentUser.displayName || 'Farmer',
+                farmerName: userData?.name || 'Farmer',
                 cropType: crop,
                 quantity: quantity,
                 grade: grade,
                 expectedPrice: price,
+                basePrice: numericPrice || 0,
+                highestBid: numericPrice || 0,
+                auctionActive: isAuction,
                 location: location,
                 status: 'available',
                 createdAt: serverTimestamp()
@@ -84,6 +91,18 @@ export default function CropListingForm({ onComplete }) {
                             required
                         />
                     </div>
+                </div>
+                <div style={{ margin: '10px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <input
+                        type="checkbox"
+                        id="auctionToggle"
+                        checked={isAuction}
+                        onChange={(e) => setIsAuction(e.target.checked)}
+                        style={{ width: '20px', height: '20px' }}
+                    />
+                    <label htmlFor="auctionToggle" style={{ fontSize: '0.9rem', color: 'var(--primary)', fontWeight: '600' }}>
+                        Enable Live Bidding (Auction Mode)
+                    </label>
                 </div>
                 <div className="form-group" style={{ marginTop: '16px' }}>
                     <label>{t('location_label')}</label>

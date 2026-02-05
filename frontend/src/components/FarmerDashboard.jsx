@@ -43,6 +43,12 @@ export default function FarmerDashboard({ userData }) {
         await updateDoc(doc(db, 'listings', item.id), { status: newStatus });
     };
 
+    const closeAuction = async (id) => {
+        if (window.confirm("Stop bidding and close this auction?")) {
+            await updateDoc(doc(db, 'listings', id), { auctionActive: false });
+        }
+    };
+
     return (
         <div className="farmer-portal">
             <div className="portal-header">
@@ -109,10 +115,20 @@ export default function FarmerDashboard({ userData }) {
                                             <p>{item.quantity} • {t(item.grade)} • 📍 {item.location || 'Unknown'}</p>
                                         </div>
                                         <div className="item-meta">
-                                            <div className="item-price"><strong>{item.expectedPrice}</strong></div>
+                                            <div className="item-price">
+                                                <strong>{item.expectedPrice}</strong>
+                                                {item.auctionActive && (
+                                                    <div style={{ fontSize: '0.75rem', color: 'var(--secondary)', fontWeight: '700' }}>
+                                                        Top Bid: ₹{item.highestBid}
+                                                    </div>
+                                                )}
+                                            </div>
                                             <span className={`status-badge ${item.status}`}>{t(item.status)}</span>
                                         </div>
                                         <div className="item-actions">
+                                            {item.auctionActive && (
+                                                <button onClick={() => closeAuction(item.id)} className="btn-icon" title="Close Auction">🔨</button>
+                                            )}
                                             <button onClick={() => toggleStatus(item)} className="btn-icon">
                                                 {item.status === 'available' ? '✅' : '🔄'}
                                             </button>
