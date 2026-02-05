@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import FarmerDashboard from './FarmerDashboard';
 import BuyerDashboard from './BuyerDashboard';
 import SMSDemo from './SMSDemo';
+import PriceIntelligence from './PriceIntelligence';
 
 export default function Dashboard({ user }) {
     const { t } = useTranslation();
@@ -54,8 +55,8 @@ export default function Dashboard({ user }) {
             {/* Top Navigation Bar */}
             <header className="dashboard-header glass-card">
                 <div className="brand">
-                    <span className="logo-icon">🌿</span>
-                    <h1 className="logo-text">Thulir</h1>
+                    <span className="logo-icon">🚜</span>
+                    <h1 className="logo-text">KisanSetu</h1>
                 </div>
 
                 <div className="user-nav">
@@ -93,9 +94,7 @@ export default function Dashboard({ user }) {
 
                     <div className="sidebar-section">
                         <h4 className="section-title">Market Insight</h4>
-                        <div className="insight-card glass-card">
-                            <p style={{ fontSize: '0.85rem' }}>Top demand in your region: <strong>Tomatoes</strong></p>
-                        </div>
+                        <PriceIntelligence />
                     </div>
                 </aside>
             </main>

@@ -47,7 +47,7 @@ export default function VoiceAssistant() {
     const processCommand = (command) => {
         const cmd = command.toLowerCase();
         if (cmd.includes('price') || cmd.includes('விலை') || cmd.includes('कीमत')) {
-            speak(t('market_trends') + " feature coming soon.");
+            speak("Showing the latest price predictions and historical trends on your dashboard.");
         } else if (cmd.includes('crop') || cmd.includes('பயிர்') || cmd.includes('फसल')) {
             speak(t('post_crop') + " module loading.");
         } else {
