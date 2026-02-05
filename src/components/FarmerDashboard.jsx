@@ -89,7 +89,7 @@ export default function FarmerDashboard({ userData }) {
             <div className="portal-body">
                 {showForm && (
                     <div className="form-section animate-slide-down" style={{ marginBottom: '40px' }}>
-                        <CropListingForm onComplete={() => setShowForm(false)} />
+                        <CropListingForm userData={userData} onComplete={() => setShowForm(false)} />
                     </div>
                 )}
 
@@ -104,7 +104,10 @@ export default function FarmerDashboard({ userData }) {
                             <div className="listings-list">
                                 {listings.map(item => (
                                     <div key={item.id} className="listing-row">
-                                        <div className="item-info"><h4>{item.cropType}</h4><p>{item.quantity} • {t(item.grade)}</p></div>
+                                        <div className="item-info">
+                                            <h4>{item.cropType}</h4>
+                                            <p>{item.quantity} • {t(item.grade)} • 📍 {item.location || 'Unknown'}</p>
+                                        </div>
                                         <div className="item-meta">
                                             <div className="item-price"><strong>{item.expectedPrice}</strong></div>
                                             <span className={`status-badge ${item.status}`}>{t(item.status)}</span>

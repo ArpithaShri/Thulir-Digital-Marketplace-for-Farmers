@@ -9,6 +9,7 @@ export default function CropListingForm({ onComplete }) {
     const [quantity, setQuantity] = useState('');
     const [grade, setGrade] = useState('grade_a');
     const [price, setPrice] = useState('');
+    const [location, setLocation] = useState(userData?.location || '');
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
@@ -22,6 +23,7 @@ export default function CropListingForm({ onComplete }) {
                 quantity: quantity,
                 grade: grade,
                 expectedPrice: price,
+                location: location,
                 status: 'available',
                 createdAt: serverTimestamp()
             });
@@ -82,6 +84,16 @@ export default function CropListingForm({ onComplete }) {
                             required
                         />
                     </div>
+                </div>
+                <div className="form-group" style={{ marginTop: '16px' }}>
+                    <label>{t('location_label')}</label>
+                    <input
+                        type="text"
+                        placeholder="e.g. Coimbatore, Tamil Nadu"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        required
+                    />
                 </div>
                 <button className="btn btn-primary" type="submit" disabled={loading} style={{ marginTop: '10px' }}>
                     {loading ? t('entering') : t('submit_listing')}
