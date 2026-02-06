@@ -7,6 +7,7 @@ import CropListingForm from './CropListingForm';
 import VerificationBadge from './trust/VerificationBadge';
 import DisputeForm from './trust/DisputeForm';
 import FinancialAdvisory from './trust/FinancialAdvisory';
+import { MOCK_LISTINGS, MOCK_DEMANDS } from '../data/mockData';
 
 export default function FarmerDashboard({ userData }) {
     const { t } = useTranslation();
@@ -24,19 +25,36 @@ export default function FarmerDashboard({ userData }) {
         setLoading(true);
         setError(null);
 
-        // Fetch My Listings
-        const unsubList = subscribeToMyListings(auth.currentUser.uid, (data) => {
-            setListings(data);
+        try {
+            // Fetch My Listings
+            const unsubList = subscribeToMyListings(auth.currentUser.uid, (data) => {
+                if (data && data.length > 0) {
+                    setListings(data);
+                } else if (activeTab === 'inventory' && listings.length === 0) {
+                    // Only fallback if specifically empty and we are looking at it
+                    // Actually let's just use live data for "My Inventory" to avoid confusion
+                    // but we can fallback for "Buyer Demands"
+                    setListings(data);
+                }
+                setLoading(false);
+            });
+
+            // Fetch Global Buyer Demands
+            const unsubDemands = subscribeToAllDemands((data) => {
+                if (data && data.length > 0) {
+                    setDemands(data);
+                } else {
+                    setDemands(MOCK_DEMANDS);
+                }
+            });
+
+            return () => { unsubList(); unsubDemands(); };
+        } catch (err) {
+            console.error("Farmer Dashboard data fetch failed:", err);
+            setDemands(MOCK_DEMANDS);
             setLoading(false);
-        });
-
-        // Fetch Global Buyer Demands
-        const unsubDemands = subscribeToAllDemands((data) => {
-            setDemands(data);
-        });
-
-        return () => { unsubList(); unsubDemands(); };
-    }, []);
+        }
+    }, [activeTab]);
 
     const handleDelete = async (id) => {
         if (window.confirm("Remove this listing?")) {

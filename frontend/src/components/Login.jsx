@@ -1,7 +1,9 @@
+import React, { useState } from 'react';
 import { auth } from '../firebase';
 import { signInAnonymously } from 'firebase/auth';
 import { createUserProfile } from '../services/userService';
 import { useTranslation } from 'react-i18next';
+import { seedDemoData } from '../services/seedService';
 
 export default function Login() {
     const { t, i18n } = useTranslation();
@@ -122,6 +124,43 @@ export default function Login() {
                     <button className="btn btn-primary" type="submit" disabled={loading}>
                         {loading ? t('entering') : t('join_btn')}
                     </button>
+
+                    <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px border-subtle var(--border-color)', textAlign: 'center' }}>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px' }}>
+                            🚀 Presenting KisanSetu? Use the demo mode for a pre-configured experience.
+                        </p>
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            style={{ background: 'rgba(255, 255, 255, 0.1)', border: '1px solid var(--primary)' }}
+                            onClick={async () => {
+                                setLoading(true);
+                                try {
+                                    // Trigger login first to get UID
+                                    const { user } = await signInAnonymously(auth);
+
+                                    // Seed data with THIS user as farmer
+                                    await seedDemoData(user.uid);
+
+                                    // Create/Update profile
+                                    await createUserProfile(user.uid, {
+                                        name: 'Rajesh Kumar (Demo Farmer)',
+                                        role: 'farmer',
+                                        location: 'Karnal, Haryana',
+                                        verified: true,
+                                        createdAt: new Date().toISOString()
+                                    });
+                                } catch (err) {
+                                    console.error(err);
+                                    setError("Demo setup failed.");
+                                } finally {
+                                    setLoading(false);
+                                }
+                            }}
+                        >
+                            ⚡ Demo Quick Start
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

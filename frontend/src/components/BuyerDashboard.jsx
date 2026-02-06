@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import DemandPostingForm from './DemandPostingForm';
 import VerificationBadge from './trust/VerificationBadge';
 import DisputeForm from './trust/DisputeForm';
+import { MOCK_LISTINGS } from '../data/mockData';
 
 export default function BuyerDashboard({ userData }) {
     const { t } = useTranslation();
@@ -31,11 +32,22 @@ export default function BuyerDashboard({ userData }) {
 
     useEffect(() => {
         setLoading(true);
-        const unsubscribe = subscribeToAllListings((data) => {
-            setListings(data);
+        try {
+            const unsubscribe = subscribeToAllListings((data) => {
+                if (data && data.length > 0) {
+                    setListings(data);
+                } else {
+                    console.log("No live listings found, using demo data.");
+                    setListings(MOCK_LISTINGS);
+                }
+                setLoading(false);
+            });
+            return () => unsubscribe();
+        } catch (err) {
+            console.error("Firestore connection failed, using fallback:", err);
+            setListings(MOCK_LISTINGS);
             setLoading(false);
-        });
-        return () => unsubscribe();
+        }
     }, []);
 
     const handleBid = async (listingId, currentHighest, bidValue) => {

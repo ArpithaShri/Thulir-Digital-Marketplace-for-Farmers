@@ -2,11 +2,18 @@ import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp, query, onSnapshot, orderBy } from 'firebase/firestore';
 
 export const createDemand = async (data) => {
-    return await addDoc(collection(db, 'demands'), {
-        ...data,
-        createdAt: serverTimestamp(),
-        status: 'open'
-    });
+    try {
+        const docRef = await addDoc(collection(db, 'demands'), {
+            ...data,
+            createdAt: serverTimestamp(),
+            status: 'open'
+        });
+        console.log(`[Firestore Success] Demand created with ID: ${docRef.id}`);
+        return docRef;
+    } catch (err) {
+        console.error(`[Firestore Failure] Error creating demand: ${err.message}`);
+        throw err;
+    }
 };
 
 export const subscribeToAllDemands = (callback) => {

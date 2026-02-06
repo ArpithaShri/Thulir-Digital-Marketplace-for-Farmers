@@ -2,11 +2,18 @@ import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp, query, where, onSnapshot, doc, deleteDoc, updateDoc, orderBy } from 'firebase/firestore';
 
 export const createListing = async (data) => {
-    return await addDoc(collection(db, 'listings'), {
-        ...data,
-        createdAt: serverTimestamp(),
-        status: 'available'
-    });
+    try {
+        const docRef = await addDoc(collection(db, 'listings'), {
+            ...data,
+            createdAt: serverTimestamp(),
+            status: 'available'
+        });
+        console.log(`[Firestore Success] Listing created with ID: ${docRef.id}`);
+        return docRef;
+    } catch (err) {
+        console.error(`[Firestore Failure] Error creating listing: ${err.message}`);
+        throw err;
+    }
 };
 
 export const deleteListing = async (id) => {

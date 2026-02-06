@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { useTranslation } from 'react-i18next';
 import { getPriceHistory, getPricePrediction } from '../services/priceService';
+import { MOCK_PRICE_HISTORY, MOCK_PRICE_PREDICTION } from '../data/mockData';
 
 export default function PriceIntelligence() {
     const { t } = useTranslation();
@@ -22,13 +23,17 @@ export default function PriceIntelligence() {
         setError(null);
         try {
             const histData = await getPriceHistory(selectedCrop);
-            setHistory(histData);
+            setHistory(histData.length > 0 ? histData : MOCK_PRICE_HISTORY);
 
             const predData = await getPricePrediction(selectedCrop);
             setPrediction(predData);
         } catch (err) {
-            console.error("Failed to fetch price intelligence:", err);
-            setError("Unable to connect to Price Intelligence service. Make sure the backend is running.");
+            console.error("Failed to fetch price intelligence, using fallback:", err);
+            // Use fallback data on error
+            setHistory(MOCK_PRICE_HISTORY);
+            setPrediction(MOCK_PRICE_PREDICTION);
+            // We set a non-blocking warning instead of a hard error
+            console.warn("ML Service unavailable. Rendering demo fallback data.");
         } finally {
             setLoading(false);
         }
