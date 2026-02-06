@@ -86,50 +86,54 @@ export default function FarmerDashboard({ userData }) {
     };
 
     return (
-        <div className="farmer-portal">
+        <div className="farmer-portal animate-slide-up">
             <div className="portal-header">
                 <div className="portal-title">
-                    <h2 style={{ fontSize: '2rem' }}>{t('farmer')} Portal</h2>
-                    <p style={{ color: 'var(--text-muted)' }}>{t('portal_subtitle')}</p>
+                    <h2>{t('farmer')} Portal</h2>
+                    <p>{t('portal_subtitle')}</p>
                 </div>
                 <div className="header-actions">
                     <div className="tab-switcher glass-card">
-                        <button className={activeTab === 'inventory' ? 'active' : ''} onClick={() => setActiveTab('inventory')}>📦 {t('my_inventory')}</button>
-                        <button className={activeTab === 'demands' ? 'active' : ''} onClick={() => setActiveTab('demands')}>📢 {t('view_demand')}</button>
+                        <button className={activeTab === 'inventory' ? 'active' : ''} onClick={() => setActiveTab('inventory')}>
+                            📦 {t('my_inventory')}
+                        </button>
+                        <button className={activeTab === 'demands' ? 'active' : ''} onClick={() => setActiveTab('demands')}>
+                            📢 {t('view_demand')}
+                        </button>
                     </div>
-                    <button className="btn btn-primary" onClick={() => setShowForm(!showForm)} style={{ width: 'auto', padding: '12px 24px' }}>
-                        {showForm ? `← ${t('close')}` : `➕ ${t('post_crop')}`}
-                    </button>
                 </div>
             </div>
 
             {/* Quick Stats */}
             <div className="stats-banner">
                 <div className="stat-pill glass-card">
-                    <span className="pill-icon">💰</span>
+                    <div className="pill-icon">💰</div>
                     <div className="pill-text">
                         <span className="pill-label">{t('total_earnings')}</span>
                         <span className="pill-value">₹45,200</span>
                     </div>
                 </div>
                 <div className="stat-pill glass-card">
-                    <span className="pill-icon">📦</span>
+                    <div className="pill-icon">📦</div>
                     <div className="pill-text">
                         <span className="pill-label">{t('active_listings')}</span>
                         <span className="pill-value">{listings.length}</span>
                     </div>
                 </div>
                 <div className="stat-pill glass-card">
-                    <span className="pill-icon">🔥</span>
+                    <div className="pill-icon">🔥</div>
                     <div className="pill-text">
                         <span className="pill-label">{t('open_demands')}</span>
                         <span className="pill-value">{demands.length}</span>
                     </div>
                 </div>
+                <button className="btn btn-primary" onClick={() => setShowForm(!showForm)} style={{ height: 'auto', padding: '24px' }}>
+                    {showForm ? `✕ ${t('close')}` : `➕ ${t('post_crop')}`}
+                </button>
             </div>
 
-            <div className="portal-main-layout" style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
-                <div className="portal-body" style={{ flex: 1, minWidth: 0 }}>
+            <div className="portal-main-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '40px', alignItems: 'flex-start' }}>
+                <div className="portal-body" style={{ minWidth: 0 }}>
                     {showForm && (
                         <div className="form-section animate-slide-down" style={{ marginBottom: '40px' }}>
                             <CropListingForm userData={userData} onComplete={() => setShowForm(false)} />

@@ -55,10 +55,30 @@ export default function Dashboard({ user }) {
     return (
         <div className="dashboard-app">
             {/* Top Navigation Bar */}
-            <header className="dashboard-header glass-card">
+            <header className="dashboard-header glass-card animate-slide-down">
                 <div className="brand">
-                    <span className="logo-icon">🚜</span>
-                    <h1 className="logo-text">Thulir</h1>
+                    <div className="logo-icon-wrapper">
+                        <span className="logo-icon">🌿</span>
+                    </div>
+                    <div className="logo-name">
+                        <h1 className="logo-text">Thulir</h1>
+                        <span className="tagline">{t('rural_india')}</span>
+                    </div>
+                </div>
+
+                <div className="main-nav">
+                    <button
+                        className={`nav-link ${view === 'main' ? 'active' : ''}`}
+                        onClick={() => setView('main')}
+                    >
+                        <span>🏠</span> {t('home')}
+                    </button>
+                    <button
+                        className={`nav-link ${view === 'disputes' ? 'active' : ''}`}
+                        onClick={() => setView('disputes')}
+                    >
+                        <span>🛡️</span> {t('report_issue')}
+                    </button>
                 </div>
 
                 <div className="user-nav">
@@ -67,11 +87,11 @@ export default function Dashboard({ user }) {
                             {userData.name.charAt(0).toUpperCase()}
                         </div>
                         <div className="user-details-mini">
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div className="user-name-wrapper">
                                 <span className="user-name">{userData.name}</span>
                                 <VerificationBadge verified={userData.verified !== false} size="sm" />
                             </div>
-                            <span className="user-role">{t(userData.role)} • 📍 {userData.location}</span>
+                            <span className="user-role">{t(userData.role)} • {userData.location}</span>
                         </div>
                     </div>
                     <button className="btn-logout" onClick={() => auth.signOut()}>
@@ -83,23 +103,6 @@ export default function Dashboard({ user }) {
             <main className="dashboard-layout">
                 {/* Main Content Area */}
                 <div className="dashboard-content-area">
-                    <div style={{ marginBottom: '20px', display: 'flex', gap: '12px' }}>
-                        <button
-                            className={`btn ${view === 'main' ? 'btn-primary' : 'btn-secondary'}`}
-                            onClick={() => setView('main')}
-                            style={{ width: 'auto', padding: '8px 16px' }}
-                        >
-                            🏠 Home
-                        </button>
-                        <button
-                            className={`btn ${view === 'disputes' ? 'btn-primary' : 'btn-secondary'}`}
-                            onClick={() => setView('disputes')}
-                            style={{ width: 'auto', padding: '8px 16px' }}
-                        >
-                            🛡️ Safety & Disputes
-                        </button>
-                    </div>
-
                     {view === 'main' ? (
                         userData.role === 'farmer' ? (
                             <FarmerDashboard userData={userData} />

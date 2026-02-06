@@ -29,10 +29,8 @@ export default function PriceIntelligence() {
             setPrediction(predData);
         } catch (err) {
             console.error("Failed to fetch price intelligence, using fallback:", err);
-            // Use fallback data on error
             setHistory(MOCK_PRICE_HISTORY);
             setPrediction(MOCK_PRICE_PREDICTION);
-            // We set a non-blocking warning instead of a hard error
             console.warn("ML Service unavailable. Rendering demo fallback data.");
         } finally {
             setLoading(false);
@@ -67,22 +65,35 @@ export default function PriceIntelligence() {
             ) : (
                 <div className="intelligence-content">
                     {/* Prediction Panel */}
-                    <div className="prediction-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px' }}>
-                        <div className="pred-item glass-card" style={{ padding: '20px', textAlign: 'center', background: 'rgba(45, 90, 39, 0.05)' }}>
-                            <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Next Month Projection</span>
-                            <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--primary)', margin: '8px 0' }}>
+                    <div className="prediction-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '24px', marginBottom: '32px' }}>
+                        <div className="pred-item glass-card" style={{ padding: '24px', textAlign: 'center', background: 'var(--panel)', border: 'none' }}>
+                            <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '600', display: 'block' }}>Next Month Projection</span>
+                            <div style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--primary)', margin: '12px 0', letterSpacing: '-1px' }}>
                                 ₹{prediction?.predicted_price}
                             </div>
-                            <span className={`trend-badge ${prediction?.trend.toLowerCase()}`}>
-                                {prediction?.trend === 'Upward' ? '↗️ Increasing' : '↘️ Decreasing'}
+                            <span className={`trend-badge ${prediction?.trend.toLowerCase()}`} style={{
+                                padding: '6px 16px',
+                                borderRadius: '50px',
+                                background: prediction?.trend === 'Upward' ? 'var(--success)' : 'var(--error)',
+                                color: 'white',
+                                fontSize: '0.85rem',
+                                fontWeight: '700'
+                            }}>
+                                {prediction?.trend === 'Upward' ? '↗ Increasing' : '↘ Decreasing'}
                             </span>
                         </div>
-                        <div className="pred-item glass-card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                                <span className={`demand-indicator ${prediction?.demand_level.toLowerCase()}`}></span>
-                                <strong style={{ fontSize: '0.9rem' }}>{prediction?.demand_level} Demand</strong>
+                        <div className="pred-item glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px solid var(--border)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                                <span className={`demand-indicator ${prediction?.demand_level.toLowerCase()}`} style={{
+                                    width: '12px',
+                                    height: '12px',
+                                    borderRadius: '50%',
+                                    background: prediction?.demand_level === 'High' ? '#ef4444' : '#f59e0b',
+                                    boxShadow: `0 0 12px ${prediction?.demand_level === 'High' ? '#ef4444' : '#f59e0b'}`
+                                }}></span>
+                                <strong style={{ fontSize: '1rem', color: 'var(--text-main)' }}>{prediction?.demand_level} Demand</strong>
                             </div>
-                            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: '1.6' }}>
                                 {prediction?.explanation}
                             </p>
                         </div>

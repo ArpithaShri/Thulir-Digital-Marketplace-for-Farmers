@@ -46,12 +46,15 @@ export default function CropListingForm({ userData, onComplete }) {
     };
 
     return (
-        <div className="crop-form-container glass-card" style={{ padding: '30px' }}>
-            <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '1.5rem' }}>🌱</span> {t('post_crop')}
-            </h3>
+        <div className="crop-form-container glass-card animate-slide-down" style={{ padding: '40px', border: '1px solid rgba(30, 77, 43, 0.1)' }}>
+            <div style={{ marginBottom: '32px' }}>
+                <h3 style={{ fontSize: '1.8rem', display: 'flex', alignItems: 'center', gap: '15px' }}>
+                    <div style={{ background: 'rgba(45, 90, 39, 0.1)', padding: '10px', borderRadius: '14px' }}>🌱</div>
+                    {t('post_crop')}
+                </h3>
+            </div>
             <form onSubmit={handleSubmit} className="listing-form">
-                <div className="form-grid">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                     <div className="form-group">
                         <label>{t('crop_type')}</label>
                         <input
@@ -91,19 +94,8 @@ export default function CropListingForm({ userData, onComplete }) {
                         />
                     </div>
                 </div>
-                <div style={{ margin: '10px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <input
-                        type="checkbox"
-                        id="auctionToggle"
-                        checked={isAuction}
-                        onChange={(e) => setIsAuction(e.target.checked)}
-                        style={{ width: '20px', height: '20px' }}
-                    />
-                    <label htmlFor="auctionToggle" style={{ fontSize: '0.9rem', color: 'var(--primary)', fontWeight: '600' }}>
-                        {t('auction_mode')}
-                    </label>
-                </div>
-                <div className="form-group" style={{ marginTop: '16px' }}>
+
+                <div className="form-group" style={{ marginTop: '8px' }}>
                     <label>{t('location_label')}</label>
                     <input
                         type="text"
@@ -113,7 +105,29 @@ export default function CropListingForm({ userData, onComplete }) {
                         required
                     />
                 </div>
-                <button className="btn btn-primary" type="submit" disabled={loading} style={{ marginTop: '10px' }}>
+
+                <div style={{
+                    margin: '24px 0',
+                    padding: '16px 20px',
+                    background: 'rgba(30, 77, 43, 0.04)',
+                    borderRadius: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px'
+                }}>
+                    <input
+                        type="checkbox"
+                        id="auctionToggle"
+                        checked={isAuction}
+                        onChange={(e) => setIsAuction(e.target.checked)}
+                        style={{ width: '22px', height: '22px', accentColor: 'var(--primary)' }}
+                    />
+                    <label htmlFor="auctionToggle" style={{ fontSize: '0.95rem', color: 'var(--primary)', fontWeight: '700', textTransform: 'none', letterSpacing: '0' }}>
+                        {t('auction_mode')}
+                    </label>
+                </div>
+
+                <button className="btn btn-primary" type="submit" disabled={loading} style={{ height: '56px' }}>
                     {loading ? t('entering') : t('submit_listing')}
                 </button>
             </form>

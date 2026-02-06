@@ -38,12 +38,15 @@ export default function DemandPostingForm({ userData, onComplete }) {
     };
 
     return (
-        <div className="demand-form-container glass-card" style={{ padding: '30px' }}>
-            <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '1.5rem' }}>📢</span> {t('post_demand')}
-            </h3>
+        <div className="demand-form-container glass-card animate-slide-down" style={{ padding: '40px', border: '1px solid rgba(59, 130, 246, 0.1)' }}>
+            <div style={{ marginBottom: '32px' }}>
+                <h3 style={{ fontSize: '1.8rem', display: 'flex', alignItems: 'center', gap: '15px' }}>
+                    <div style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '10px', borderRadius: '14px' }}>📢</div>
+                    {t('post_demand')}
+                </h3>
+            </div>
             <form onSubmit={handleSubmit} className="listing-form">
-                <div className="form-grid">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                     <div className="form-group">
                         <label>{t('crop_type')}</label>
                         <input
@@ -82,7 +85,7 @@ export default function DemandPostingForm({ userData, onComplete }) {
                         />
                     </div>
                 </div>
-                <button className="btn btn-primary" type="submit" disabled={loading} style={{ marginTop: '10px' }}>
+                <button className="btn btn-primary" type="submit" disabled={loading} style={{ height: '56px', marginTop: '16px' }}>
                     {loading ? t('entering') : t('submit_listing')}
                 </button>
             </form>

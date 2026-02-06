@@ -91,16 +91,16 @@ export default function BuyerDashboard({ userData }) {
     });
 
     return (
-        <div className="buyer-portal">
+        <div className="buyer-portal animate-slide-up">
             <div className="portal-header">
                 <div className="portal-title">
-                    <h2 style={{ fontSize: '2rem' }}>{t('buyer_portal')}</h2>
-                    <p style={{ color: 'var(--text-muted)' }}>
+                    <h2>{t('buyer_portal')}</h2>
+                    <p>
                         {t('connected_as')} <strong>{t(userData.entityType || 'buyer')}</strong>
                     </p>
                 </div>
-                <button className="btn btn-primary" onClick={() => setShowDemandForm(!showDemandForm)} style={{ width: 'auto', padding: '12px 24px' }}>
-                    {showDemandForm ? `← ${t('back_to_market')}` : `➕ ${t('post_demand')}`}
+                <button className="btn btn-primary" onClick={() => setShowDemandForm(!showDemandForm)} style={{ height: 'auto', padding: '16px 32px' }}>
+                    {showDemandForm ? `✕ ${t('close')}` : `➕ ${t('post_demand')}`}
                 </button>
             </div>
 
@@ -120,9 +120,9 @@ export default function BuyerDashboard({ userData }) {
             ) : (
                 <div className="marketplace-container">
                     {/* Professional Search & Filter Bar */}
-                    <div className="filter-bar glass-card" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr auto auto', gap: '16px', alignItems: 'flex-end' }}>
+                    <div className="filter-bar glass-card" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) auto auto', gap: '20px', alignItems: 'flex-end', padding: '32px', marginBottom: '40px' }}>
                         <div className="filter-group">
-                            <label>🔍 {t('search_placeholder')}</label>
+                            <label>{t('search_placeholder')}</label>
                             <input
                                 type="text"
                                 placeholder={t('search_placeholder')}
@@ -131,7 +131,7 @@ export default function BuyerDashboard({ userData }) {
                             />
                         </div>
                         <div className="filter-group">
-                            <label>📍 {t('location_label')}</label>
+                            <label>{t('location_label')}</label>
                             <input
                                 type="text"
                                 placeholder={t('state_district')}
@@ -140,7 +140,7 @@ export default function BuyerDashboard({ userData }) {
                             />
                         </div>
                         <div className="filter-group">
-                            <label>💎 {t('quality')}</label>
+                            <label>{t('quality')}</label>
                             <select value={gradeTerm} onChange={(e) => setGradeTerm(e.target.value)}>
                                 <option value="">{t('all_crops')}</option>
                                 <option value="grade_a">{t('grade_a')}</option>
@@ -148,18 +148,18 @@ export default function BuyerDashboard({ userData }) {
                                 <option value="grade_c">{t('grade_c')}</option>
                             </select>
                         </div>
-                        <button className="btn btn-primary" onClick={applySearch} style={{ width: 'auto', padding: '14px 24px', borderRadius: '16px' }}>
+                        <button className="btn btn-primary" onClick={applySearch} style={{ height: '52px', padding: '0 32px' }}>
                             {t('search_btn')}
                         </button>
-                        <button className="btn btn-secondary" onClick={clearFilters} style={{ width: 'auto', padding: '14px', borderRadius: '16px' }}>
+                        <button className="btn btn-secondary" onClick={clearFilters} style={{ height: '52px', padding: '0 20px' }}>
                             🔄
                         </button>
                     </div>
 
-                    <div className="listings-section glass-card" style={{ marginTop: '32px' }}>
+                    <div className="listings-section glass-card">
                         <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <h3 style={{ fontFamily: 'Outfit' }}>🌾 {t('view_supply')}</h3>
-                            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                            <span className="status-badge" style={{ background: 'var(--panel)', padding: '6px 16px', borderRadius: '50px', color: 'var(--text-muted)' }}>
                                 {t('showing')} {filteredListings.length} {t('offers')}
                             </span>
                         </div>

@@ -23,10 +23,10 @@ export default function SMSDemo() {
     return (
         <div className="sms-widget glass-card">
             <div className="widget-header">
-                <div className="widget-icon">📟</div>
+                <div className="widget-icon" style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6' }}>📟</div>
                 <div className="widget-title">
-                    <h4>{t('sms_demo')}</h4>
-                    <span>Offline Access Bridge</span>
+                    <h4 style={{ fontFamily: 'Outfit' }}>{t('sms_demo')}</h4>
+                    <span style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--text-muted)' }}>OFFLINE ACCESS BRIDGE</span>
                 </div>
             </div>
 
@@ -37,22 +37,30 @@ export default function SMSDemo() {
 
                 <form onSubmit={simulateSMS} className="sms-form">
                     <div className="input-with-label">
-                        <label>Recipient Number</label>
+                        <label style={{ fontSize: '0.7rem', fontWeight: '800', color: 'var(--primary)', marginBottom: '8px' }}>RECIPIENT NUMBER</label>
                         <input
                             type="tel"
                             placeholder="+91 98765 43210"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             disabled={isSending}
+                            style={{ padding: '12px 20px', borderRadius: '16px' }}
                         />
                     </div>
 
                     <button
-                        className={`btn btn-secondary sms-btn ${isSending ? 'loading' : ''}`}
+                        className={`btn sms-btn ${isSending ? 'loading' : ''}`}
                         disabled={isSending || !phone}
+                        style={{
+                            background: 'var(--primary)',
+                            color: 'white',
+                            border: 'none',
+                            height: '48px',
+                            boxShadow: '0 4px 12px rgba(30, 77, 43, 0.2)'
+                        }}
                     >
                         {isSending ? (
-                            <span className="spinner-small"></span>
+                            <span className="spinner-small" style={{ borderColor: 'rgba(255,255,255,0.2)', borderTopColor: '#fff' }}></span>
                         ) : (
                             'Send Price Update'
                         )}
