@@ -96,11 +96,11 @@ export default function BuyerDashboard({ userData }) {
                 <div className="portal-title">
                     <h2 style={{ fontSize: '2rem' }}>{t('buyer_portal')}</h2>
                     <p style={{ color: 'var(--text-muted)' }}>
-                        Connected as: <strong>{t(userData.entityType || 'buyer')}</strong>
+                        {t('connected_as')} <strong>{t(userData.entityType || 'buyer')}</strong>
                     </p>
                 </div>
                 <button className="btn btn-primary" onClick={() => setShowDemandForm(!showDemandForm)} style={{ width: 'auto', padding: '12px 24px' }}>
-                    {showDemandForm ? '← Back to Market' : `➕ ${t('post_demand')}`}
+                    {showDemandForm ? `← ${t('back_to_market')}` : `➕ ${t('post_demand')}`}
                 </button>
             </div>
 
@@ -125,7 +125,7 @@ export default function BuyerDashboard({ userData }) {
                             <label>🔍 {t('search_placeholder')}</label>
                             <input
                                 type="text"
-                                placeholder="Search crops..."
+                                placeholder={t('search_placeholder')}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -134,7 +134,7 @@ export default function BuyerDashboard({ userData }) {
                             <label>📍 {t('location_label')}</label>
                             <input
                                 type="text"
-                                placeholder="State or District"
+                                placeholder={t('state_district')}
                                 value={locTerm}
                                 onChange={(e) => setLocTerm(e.target.value)}
                             />
@@ -149,7 +149,7 @@ export default function BuyerDashboard({ userData }) {
                             </select>
                         </div>
                         <button className="btn btn-primary" onClick={applySearch} style={{ width: 'auto', padding: '14px 24px', borderRadius: '16px' }}>
-                            Search
+                            {t('search_btn')}
                         </button>
                         <button className="btn btn-secondary" onClick={clearFilters} style={{ width: 'auto', padding: '14px', borderRadius: '16px' }}>
                             🔄
@@ -160,13 +160,13 @@ export default function BuyerDashboard({ userData }) {
                         <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <h3 style={{ fontFamily: 'Outfit' }}>🌾 {t('view_supply')}</h3>
                             <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                                Showing {filteredListings.length} farmer offers
+                                {t('showing')} {filteredListings.length} {t('offers')}
                             </span>
                         </div>
 
                         {filteredListings.length === 0 ? (
                             <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                                <p>No matching produce found. Try adjusting your search filters.</p>
+                                <p>{t('no_matching')} {t('adjust_filters')}</p>
                             </div>
                         ) : (
                             <div className="marketplace-grid">
@@ -175,17 +175,17 @@ export default function BuyerDashboard({ userData }) {
                                         <div className="market-card-header">
                                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                                 <span className="crop-tag">{item.cropType}</span>
-                                                {item.auctionActive && <span className="urgent-badge" style={{ background: '#fef3c7', color: '#d97706' }}>LIVE 🔨</span>}
+                                                {item.auctionActive && <span className="urgent-badge" style={{ background: '#fef3c7', color: '#d97706' }}>{t('live')} 🔨</span>}
                                             </div>
                                             <span className={`grade-tag ${item.grade}`}>{t(item.grade).split(' ')[0]}</span>
                                         </div>
                                         <div className="market-card-body">
                                             <div className="quantity-info">
                                                 <strong>{item.quantity}</strong>
-                                                <span>available</span>
+                                                <span>{t('available')}</span>
                                             </div>
                                             <div className="price-info">
-                                                <span className="price-label">{item.auctionActive ? 'Current Bid' : 'Rate Offer'}</span>
+                                                <span className="price-label">{item.auctionActive ? t('current_bid') : t('rate_offer')}</span>
                                                 <span className="price-value">₹{item.auctionActive ? item.highestBid : item.expectedPrice}</span>
                                             </div>
                                         </div>
@@ -194,7 +194,7 @@ export default function BuyerDashboard({ userData }) {
                                                 <div style={{ display: 'flex', gap: '8px' }}>
                                                     <input
                                                         type="number"
-                                                        placeholder={`Min ₹${(item.highestBid || 0) + 1}`}
+                                                        placeholder={`${t('min')} ₹${(item.highestBid || 0) + 1}`}
                                                         value={bidInputs[item.id] || ''}
                                                         onChange={(e) => setBidInputs({ ...bidInputs, [item.id]: e.target.value })}
                                                         style={{ flex: 1, padding: '8px', fontSize: '0.9rem' }}
@@ -204,7 +204,7 @@ export default function BuyerDashboard({ userData }) {
                                                         style={{ background: 'var(--secondary)', color: 'white', borderColor: 'var(--secondary)' }}
                                                         onClick={() => handleBid(item.id, item.highestBid, bidInputs[item.id])}
                                                     >
-                                                        Place Bid
+                                                        {t('place_bid')}
                                                     </button>
                                                 </div>
                                             ) : (
@@ -216,11 +216,11 @@ export default function BuyerDashboard({ userData }) {
                                                                 <span className="name">{item.farmerName}</span>
                                                                 <VerificationBadge verified={item.farmerVerified !== false} size="sm" />
                                                             </div>
-                                                            <span className="loc">📍 {item.location || 'Rural India'}</span>
+                                                            <span className="loc">📍 {item.location || t('rural_india')}</span>
                                                         </div>
                                                     </div>
                                                     <div style={{ display: 'flex', gap: '8px' }}>
-                                                        <button className="btn-buy-mini">Contact</button>
+                                                        <button className="btn-buy-mini">{t('contact')}</button>
                                                         <button
                                                             className="btn-buy-mini"
                                                             style={{ background: 'transparent', color: '#ef4444', borderColor: '#ef4444' }}

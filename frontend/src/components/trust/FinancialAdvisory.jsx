@@ -1,7 +1,9 @@
 import React, { useMemo } from 'react';
 import { getEligibleSchemes, getRelevantAdvisories } from '../../services/advisoryService';
+import { useTranslation } from 'react-i18next';
 
 const FinancialAdvisory = ({ userData, listings = [] }) => {
+    const { t } = useTranslation();
     // Determine unique crops from listings
     const farmerCrops = useMemo(() => {
         const crops = listings.map(l => l.cropType.toLowerCase());
@@ -22,16 +24,16 @@ const FinancialAdvisory = ({ userData, listings = [] }) => {
 
     return (
         <div className="financial-advisory-section">
-            <h4 className="section-title">📊 Financial & Advisory</h4>
+            <h4 className="section-title">📊 {t('financial_advisory')}</h4>
 
             {/* Subsidy & Scheme Alerts */}
             <div className="advisory-group" style={{ marginBottom: '24px' }}>
                 <h5 style={{ fontSize: '0.8rem', color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    🎁 Eligible Schemes ({eligibleSchemes.length})
+                    🎁 {t('eligible_schemes')} ({eligibleSchemes.length})
                 </h5>
                 {eligibleSchemes.length === 0 ? (
                     <div className="glass-card" style={{ padding: '16px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                        Add crops to your inventory to see eligible government schemes.
+                        {t('add_crops_to_see')}
                     </div>
                 ) : (
                     <div style={{ display: 'grid', gap: '12px' }}>
@@ -39,7 +41,7 @@ const FinancialAdvisory = ({ userData, listings = [] }) => {
                             <div key={scheme.schemeId} className="glass-card animate-slide-up" style={{ padding: '16px', borderLeft: '4px solid var(--accent)', background: 'rgba(245, 158, 11, 0.05)' }}>
                                 <h6 style={{ margin: '0 0 4px 0', fontSize: '0.9rem', color: 'var(--text-main)' }}>{scheme.schemeName}</h6>
                                 <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{scheme.description}</p>
-                                <button style={{ marginTop: '8px', padding: '4px 10px', fontSize: '0.7rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Apply Details</button>
+                                <button style={{ marginTop: '8px', padding: '4px 10px', fontSize: '0.7rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>{t('apply_details')}</button>
                             </div>
                         ))}
                     </div>
@@ -49,7 +51,7 @@ const FinancialAdvisory = ({ userData, listings = [] }) => {
             {/* Advisory Messages */}
             <div className="advisory-group">
                 <h5 style={{ fontSize: '0.8rem', color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    💡 Smart Advisory
+                    💡 {t('smart_advisory')}
                 </h5>
                 <div style={{ display: 'grid', gap: '12px' }}>
                     {relevantAdvisories.length > 0 ? (
@@ -68,7 +70,7 @@ const FinancialAdvisory = ({ userData, listings = [] }) => {
                             <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
                                 <span style={{ fontSize: '1.2rem' }}>⛅</span>
                                 <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
-                                    Weather is stable. Market conditions are normal for your region.
+                                    {t('stable_weather')}
                                 </p>
                             </div>
                         </div>

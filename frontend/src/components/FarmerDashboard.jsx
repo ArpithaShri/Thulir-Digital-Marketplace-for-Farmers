@@ -90,15 +90,15 @@ export default function FarmerDashboard({ userData }) {
             <div className="portal-header">
                 <div className="portal-title">
                     <h2 style={{ fontSize: '2rem' }}>{t('farmer')} Portal</h2>
-                    <p style={{ color: 'var(--text-muted)' }}>Manage harvest and track market needs</p>
+                    <p style={{ color: 'var(--text-muted)' }}>{t('portal_subtitle')}</p>
                 </div>
                 <div className="header-actions">
                     <div className="tab-switcher glass-card">
-                        <button className={activeTab === 'inventory' ? 'active' : ''} onClick={() => setActiveTab('inventory')}>📦 My Inventory</button>
-                        <button className={activeTab === 'demands' ? 'active' : ''} onClick={() => setActiveTab('demands')}>📢 Buyer Demands</button>
+                        <button className={activeTab === 'inventory' ? 'active' : ''} onClick={() => setActiveTab('inventory')}>📦 {t('my_inventory')}</button>
+                        <button className={activeTab === 'demands' ? 'active' : ''} onClick={() => setActiveTab('demands')}>📢 {t('view_demand')}</button>
                     </div>
                     <button className="btn btn-primary" onClick={() => setShowForm(!showForm)} style={{ width: 'auto', padding: '12px 24px' }}>
-                        {showForm ? '← Close' : `➕ ${t('post_crop')}`}
+                        {showForm ? `← ${t('close')}` : `➕ ${t('post_crop')}`}
                     </button>
                 </div>
             </div>
@@ -108,21 +108,21 @@ export default function FarmerDashboard({ userData }) {
                 <div className="stat-pill glass-card">
                     <span className="pill-icon">💰</span>
                     <div className="pill-text">
-                        <span className="pill-label">Total Earnings</span>
+                        <span className="pill-label">{t('total_earnings')}</span>
                         <span className="pill-value">₹45,200</span>
                     </div>
                 </div>
                 <div className="stat-pill glass-card">
                     <span className="pill-icon">📦</span>
                     <div className="pill-text">
-                        <span className="pill-label">Active Listings</span>
+                        <span className="pill-label">{t('active_listings')}</span>
                         <span className="pill-value">{listings.length}</span>
                     </div>
                 </div>
                 <div className="stat-pill glass-card">
                     <span className="pill-icon">🔥</span>
                     <div className="pill-text">
-                        <span className="pill-label">Open Demands</span>
+                        <span className="pill-label">{t('open_demands')}</span>
                         <span className="pill-value">{demands.length}</span>
                     </div>
                 </div>
@@ -160,14 +160,14 @@ export default function FarmerDashboard({ userData }) {
                                         <div key={item.id} className="listing-row">
                                             <div className="item-info">
                                                 <h4>{item.cropType}</h4>
-                                                <p>{item.quantity} • {t(item.grade)} • 📍 {item.location || 'Unknown'}</p>
+                                                <p>{item.quantity} • {t(item.grade)} • 📍 {item.location || t('unknown')}</p>
                                             </div>
                                             <div className="item-meta">
                                                 <div className="item-price">
                                                     <strong>{item.expectedPrice}</strong>
                                                     {item.auctionActive && (
                                                         <div style={{ fontSize: '0.75rem', color: 'var(--secondary)', fontWeight: '700' }}>
-                                                            Top Bid: ₹{item.highestBid}
+                                                            {t('top_bid')}: ₹{item.highestBid}
                                                         </div>
                                                     )}
                                                 </div>
@@ -201,10 +201,10 @@ export default function FarmerDashboard({ userData }) {
                                             <div className="item-info">
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                     <h4>{item.cropType}</h4>
-                                                    {item.urgency === 'urgent' && <span className="urgent-badge">URGENT</span>}
+                                                    {item.urgency === 'urgent' && <span className="urgent-badge">{t('urgent')}</span>}
                                                 </div>
                                                 <p style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
-                                                    {item.quantity} • Needed by
+                                                    {item.quantity} • {t('needed_by')}
                                                     <strong>{item.buyerName}</strong>
                                                     <VerificationBadge verified={item.buyerVerified !== false} size="sm" />
                                                     ({t(item.entityType || 'buyer')})
@@ -215,12 +215,12 @@ export default function FarmerDashboard({ userData }) {
                                                 <span className="location-tag">📍 {item.location}</span>
                                             </div>
                                             <div className="item-actions">
-                                                <button className="btn-buy-mini" style={{ background: 'var(--primary)', color: 'white', border: 'none' }}>Offer</button>
+                                                <button className="btn-buy-mini" style={{ background: 'var(--primary)', color: 'white', border: 'none' }}>{t('offer')}</button>
                                                 <button
                                                     className="btn-icon"
                                                     style={{ color: '#ef4444' }}
                                                     onClick={() => setDisputeItem(item)}
-                                                    title="Report Issue"
+                                                    title={t('report_issue')}
                                                 >
                                                     🚩
                                                 </button>

@@ -65,7 +65,7 @@ export default function DemandPostingForm({ userData, onComplete }) {
                         />
                     </div>
                     <div className="form-group">
-                        <label>Urgency</label>
+                        <label>{t('urgency_label')}</label>
                         <select value={urgency} onChange={(e) => setUrgency(e.target.value)}>
                             <option value="normal">{t('normal')}</option>
                             <option value="urgent">{t('urgent')}</option>

@@ -17,7 +17,7 @@ export default function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
         if (!name || !location) {
-            setError('Please fill in all fields');
+            setError(t('fill_fields'));
             return;
         }
         setError('');
@@ -37,7 +37,7 @@ export default function Login() {
 
         } catch (err) {
             console.error(err);
-            setError(`Login failed: ${err.message}`);
+            setError(`${t('login_failed')}: ${err.message}`);
         } finally {
             setLoading(false);
         }
@@ -78,7 +78,7 @@ export default function Login() {
                                     onChange={(e) => setRole(e.target.value)}
                                 />
                                 <div className="role-card">
-                                    <span className="icon">�</span>
+                                    <span className="icon">🛍️</span>
                                     <span>{t('buyer')}</span>
                                 </div>
                             </label>
@@ -127,7 +127,7 @@ export default function Login() {
 
                     <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px border-subtle var(--border-color)', textAlign: 'center' }}>
                         <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px' }}>
-                            🚀 Presenting Thulir? Use the demo mode for a pre-configured experience.
+                            🚀 {t('demo_msg')}
                         </p>
                         <button
                             type="button"
@@ -152,13 +152,13 @@ export default function Login() {
                                     });
                                 } catch (err) {
                                     console.error(err);
-                                    setError("Demo setup failed.");
+                                    setError(t('demo_failed'));
                                 } finally {
                                     setLoading(false);
                                 }
                             }}
                         >
-                            ⚡ Demo Quick Start
+                            ⚡ {t('demo_btn')}
                         </button>
                     </div>
                 </form>

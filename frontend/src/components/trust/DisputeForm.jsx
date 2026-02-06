@@ -1,7 +1,10 @@
+import React, { useState } from 'react';
 import { auth } from '../../firebase';
 import { submitDispute } from '../../services/disputeService';
+import { useTranslation } from 'react-i18next';
 
 const DisputeForm = ({ listingId, reportedAgainstId, reportedAgainstName, onClose }) => {
+    const { t } = useTranslation();
     const [reason, setReason] = useState('');
     const [submitting, setSubmitting] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -36,8 +39,8 @@ const DisputeForm = ({ listingId, reportedAgainstId, reportedAgainstName, onClos
         return (
             <div className="glass-card animate-fade-in" style={{ padding: '24px', textAlign: 'center', borderColor: '#22c55e' }}>
                 <span style={{ fontSize: '48px' }}>✅</span>
-                <h3>Dispute Submitted</h3>
-                <p>Our team will review your report shortly.</p>
+                <h3>{t('dispute_submitted')}</h3>
+                <p>{t('review_shortly')}</p>
             </div>
         );
     }
@@ -45,21 +48,21 @@ const DisputeForm = ({ listingId, reportedAgainstId, reportedAgainstName, onClos
     return (
         <div className="glass-card animate-slide-down" style={{ padding: '24px', maxWidth: '500px', margin: '0 auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <h3 style={{ margin: 0 }}>Report an Issue</h3>
+                <h3 style={{ margin: 0 }}>{t('report_issue')}</h3>
                 <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: 'var(--text-muted)' }}>&times;</button>
             </div>
 
             <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
-                Reporting against: <strong>{reportedAgainstName}</strong>
+                {t('reporting_against')}: <strong>{reportedAgainstName}</strong>
             </p>
 
             <form onSubmit={handleSubmit}>
                 <div className="form-group" style={{ marginBottom: '16px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>Reason for Dispute</label>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500' }}>{t('reason_for_dispute')}</label>
                     <textarea
                         className="form-control"
                         rows="4"
-                        placeholder="Please describe the issue in detail (e.g., quality mismatch, payment delay, etc.)"
+                        placeholder={t('describe_issue')}
                         value={reason}
                         onChange={(e) => setReason(e.target.value)}
                         required
@@ -75,7 +78,7 @@ const DisputeForm = ({ listingId, reportedAgainstId, reportedAgainstName, onClos
                         style={{ flex: 1 }}
                         disabled={submitting}
                     >
-                        Cancel
+                        {t('cancel')}
                     </button>
                     <button
                         type="submit"
@@ -83,7 +86,7 @@ const DisputeForm = ({ listingId, reportedAgainstId, reportedAgainstName, onClos
                         style={{ flex: 2, backgroundColor: '#ef4444', borderColor: '#ef4444' }}
                         disabled={submitting || !reason.trim()}
                     >
-                        {submitting ? 'Submitting...' : 'Submit Report'}
+                        {submitting ? t('submitting') : t('submit_report')}
                     </button>
                 </div>
             </form>

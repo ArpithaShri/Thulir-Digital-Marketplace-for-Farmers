@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { auth } from '../../firebase';
 import { subscribeToDisputes, resolveDispute } from '../../services/disputeService';
+import { useTranslation } from 'react-i18next';
 
 const DisputesList = ({ isAdmin = false }) => {
+    const { t } = useTranslation();
     const [disputes, setDisputes] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -27,15 +29,15 @@ const DisputesList = ({ isAdmin = false }) => {
         }
     };
 
-    if (loading) return <div style={{ textAlign: 'center', padding: '20px' }}>Loading disputes...</div>;
+    if (loading) return <div style={{ textAlign: 'center', padding: '20px' }}>{t('loading_disputes')}</div>;
 
     return (
         <div className="disputes-container">
-            <h3 style={{ marginBottom: '16px' }}>{isAdmin ? 'System Dispute Management (Admin Mock)' : 'My Reported Issues'}</h3>
+            <h3 style={{ marginBottom: '16px' }}>{isAdmin ? t('admin_dispute_mgmt') : t('my_reported_issues')}</h3>
 
             {disputes.length === 0 ? (
                 <div className="glass-card" style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                    <p>No disputes found.</p>
+                    <p>{t('no_disputes')}</p>
                 </div>
             ) : (
                 <div style={{ display: 'grid', gap: '16px' }}>
@@ -54,7 +56,7 @@ const DisputesList = ({ isAdmin = false }) => {
                                     }}>
                                         {dispute.status}
                                     </span>
-                                    <h4 style={{ margin: '8px 0 4px 0' }}>Issue with {dispute.reportedAgainstName}</h4>
+                                    <h4 style={{ margin: '8px 0 4px 0' }}>{t('issue_with')} {dispute.reportedAgainstName}</h4>
                                     <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
                                         ID: {dispute.id.slice(0, 8)}... • {dispute.createdAt?.toDate().toLocaleDateString()}
                                     </p>
@@ -65,18 +67,18 @@ const DisputesList = ({ isAdmin = false }) => {
                                         className="btn btn-primary"
                                         style={{ fontSize: '0.8rem', padding: '6px 12px', width: 'auto' }}
                                     >
-                                        Mark Resolved
+                                        {t('mark_resolved')}
                                     </button>
                                 )}
                             </div>
 
                             <div style={{ backgroundColor: 'rgba(0,0,0,0.03)', padding: '12px', borderRadius: '8px', fontSize: '0.9rem' }}>
-                                <strong>Reason:</strong> {dispute.reason}
+                                <strong>{t('reason')}:</strong> {dispute.reason}
                             </div>
 
                             {isAdmin && (
                                 <div style={{ marginTop: '8px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                                    Reported by: {dispute.reportedByName} ({dispute.reportedBy})
+                                    {t('reported_by')}: {dispute.reportedByName} ({dispute.reportedBy})
                                 </div>
                             )}
                         </div>

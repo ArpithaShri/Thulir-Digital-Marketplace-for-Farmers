@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const VerificationBadge = ({ verified, size = 'sm' }) => {
+    const { t } = useTranslation();
     if (!verified) return null;
 
     const styles = {
@@ -23,10 +25,10 @@ const VerificationBadge = ({ verified, size = 'sm' }) => {
                 fontWeight: '600',
                 ...styles[size]
             }}
-            title="Verified Identity"
+            title={t('verified')}
         >
             <span style={{ fontSize: size === 'sm' ? '12px' : '16px' }}>✔</span>
-            Verified
+            {t('verified')}
         </span>
     );
 };

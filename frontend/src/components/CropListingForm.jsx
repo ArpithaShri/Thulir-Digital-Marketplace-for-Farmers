@@ -100,7 +100,7 @@ export default function CropListingForm({ userData, onComplete }) {
                         style={{ width: '20px', height: '20px' }}
                     />
                     <label htmlFor="auctionToggle" style={{ fontSize: '0.9rem', color: 'var(--primary)', fontWeight: '600' }}>
-                        Enable Live Bidding (Auction Mode)
+                        {t('auction_mode')}
                     </label>
                 </div>
                 <div className="form-group" style={{ marginTop: '16px' }}>
