@@ -4,6 +4,7 @@ import { getUserData } from '../services/userService';
 import { useTranslation } from 'react-i18next';
 import FarmerDashboard from './FarmerDashboard';
 import BuyerDashboard from './BuyerDashboard';
+import AdminDashboard from './AdminDashboard';
 import SMSDemo from './SMSDemo';
 import PriceIntelligence from './PriceIntelligence';
 import VerificationBadge from './trust/VerificationBadge';
@@ -109,12 +110,14 @@ export default function Dashboard({ user }) {
                     {view === 'main' ? (
                         userData.role === 'farmer' ? (
                             <FarmerDashboard userData={userData} />
-                        ) : (
+                        ) : userData.role === 'buyer' ? (
                             <BuyerDashboard userData={userData} />
+                        ) : (
+                            <AdminDashboard userData={userData} />
                         )
                     ) : (
                         <div className="animate-fade-in">
-                            <DisputesList isAdmin={true} /> {/* isAdmin={true} for demo convenience */}
+                            <DisputesList isAdmin={userData.role === 'admin'} />
                         </div>
                     )}
 

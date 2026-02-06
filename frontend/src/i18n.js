@@ -110,7 +110,12 @@ const resources = {
             login_failed: "Login failed",
             demo_msg: "Presenting Thulir? Use the demo mode for a pre-configured experience.",
             demo_btn: "Demo Quick Start",
-            demo_failed: "Demo setup failed."
+            demo_failed: "Demo setup failed.",
+            admin: "Admin",
+            admin_portal: "Admin Control Center",
+            system_overview_msg: "Monitor platform health, users, and marketplace disputes",
+            total_users: "Total Users",
+            open_disputes: "Open Disputes"
         }
     },
     ta: {
@@ -220,7 +225,12 @@ const resources = {
             login_failed: "உள்நுழைவு தோல்வியடைந்தது",
             demo_msg: "துளிரை வழங்குகிறீர்களா? முன்கூட்டியே உள்ளமைக்கப்பட்ட அனுபவத்திற்கு டெமோ பயன்முறையைப் பயன்படுத்தவும்.",
             demo_btn: "டெமோ விரைவான தொடக்கம்",
-            demo_failed: "டெமோ அமைப்பு தோல்வியடைந்தது."
+            demo_failed: "டெமோ அமைப்பு தோல்வியடைந்தது.",
+            admin: "நிர்வாகி",
+            admin_portal: "நிர்வாகக் கட்டுப்பாட்டு மையம்",
+            system_overview_msg: "தளத்தின் நிலை, பயனர்கள் மற்றும் சந்தை புகார்களைக் கண்காணிக்கவும்",
+            total_users: "மொத்த பயனர்கள்",
+            open_disputes: "திறந்த புகார்கள்"
         }
     },
     hi: {
@@ -330,7 +340,12 @@ const resources = {
             login_failed: "लॉगिन विफल रहा",
             demo_msg: "थुलिर पेश कर रहे हैं? पूर्व-कॉन्फ़िगर अनुभव के लिए डेमो मोड का उपयोग करें।",
             demo_btn: "डेमो त्वरित शुरुआत",
-            demo_failed: "डेमो सेटअप विफल रहा।"
+            demo_failed: "डेमो सेटअप विफल रहा।",
+            admin: "एडमिन",
+            admin_portal: "एडमिन नियंत्रण केंद्र",
+            system_overview_msg: "प्लेटफ़ॉर्म स्वास्थ्य, उपयोगकर्ताओं और बाज़ार विवादों की निगरानी करें",
+            total_users: "कुल उपयोगकर्ता",
+            open_disputes: "खुले विवाद"
         }
     },
     te: {
@@ -440,7 +455,12 @@ const resources = {
             login_failed: "లాగిన్ విఫలమైంది",
             demo_msg: "తులిర్‌ను ప్రదర్శిస్తున్నారా? ముందుగా కాన్ఫిగర్ చేసిన అనుభవం కోసం డెమో మోడ్‌ని ఉపయోగించండి.",
             demo_btn: "డెమో త్వరిత ప్రారంభం",
-            demo_failed: "డెమో సెటప్ విఫలమైంది."
+            demo_failed: "డెమో సెటప్ విఫలమైంది.",
+            admin: "అడ్మిన్",
+            admin_portal: "అడ్మిన్ నియంత్రణ కేంద్రం",
+            system_overview_msg: "ప్లాట్‌ఫారమ్ ఆరోగ్యం, వినియోగదారులు మరియు మార్కెట్‌ప్లేస్ వివాదాలను పర్యవేక్షించండి",
+            total_users: "మొత్తం వినియోగదారులు",
+            open_disputes: "ఓపెన్ వివాదాలు"
         }
     },
     kn: {
@@ -550,7 +570,12 @@ const resources = {
             login_failed: "ಲಾಗಿನ್ ವಿಫಲವಾಗಿದೆ",
             demo_msg: "ತುಲಿರ್ ಪ್ರಸ್ತುತಪಡಿಸುತ್ತಿದ್ದೀರಾ? ಪೂರ್ವ-ಸಂರಚಿತ ಅನುಭವಕ್ಕಾಗಿ ಡೆಮೊ ಮೋಡ್ ಬಳಸಿ.",
             demo_btn: "ಡೆಮೊ ತ್ವರಿತ ಪ್ರಾರಂಭ",
-            demo_failed: "ಡೆಮೊ ಸೆಟಪ್ ವಿಫಲವಾಗಿದೆ."
+            demo_failed: "ಡೆಮೊ ಸೆಟಪ್ ವಿಫಲವಾಗಿದೆ.",
+            admin: "ಅಡ್ಮಿನ್",
+            admin_portal: "ಅಡ್ಮಿನ್ ನಿಯಂತ್ರಣ ಕೇಂದ್ರ",
+            system_overview_msg: "ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ ಆರೋಗ್ಯ, ಬಳಕೆದಾರರು ಮತ್ತು ಮಾರುಕಟ್ಟೆ ವಿವಾದಗಳನ್ನು ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡಿ",
+            total_users: "ಒಟ್ಟು ಬಳಕೆದಾರರು",
+            open_disputes: "ತೆರೆದ ವಿವಾದಗಳು"
         }
     },
     ml: {
@@ -660,7 +685,12 @@ const resources = {
             login_failed: "ലോഗിൻ പരാജയപ്പെട്ടു",
             demo_msg: "തുലിർ അവതരിപ്പിക്കുകയാണോ? മുൻകൂട്ടി ക്രമീകരിച്ച അനുഭവത്തിനായി ഡെമോ മോഡ് ഉപയോഗിക്കുക.",
             demo_btn: "ഡെമോ അതിവേഗ തുടക്കം",
-            demo_failed: "ഡെമോ സജ്ജീകരണം പരാജയപ്പെട്ടു."
+            demo_failed: "ഡെമോ സജ്ജീകരണം പരാജയപ്പെട്ടു.",
+            admin: "അഡ്മിൻ",
+            admin_portal: "അഡ്മിൻ കൺട്രോൾ സെന്റർ",
+            system_overview_msg: "പ്ലാറ്റ്‌ഫോം ആരോഗ്യം, ഉപയോക്താക്കൾ, വിപണി തർക്കങ്ങൾ എന്നിവ നിരീക്ഷിക്കുക",
+            total_users: "ആകെ ഉപയോക്താക്കൾ",
+            open_disputes: "നിലവിലുള്ള തർക്കങ്ങൾ"
         }
     }
 };

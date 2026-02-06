@@ -80,6 +80,19 @@ export default function Login() {
                                     <span>{t('buyer')}</span>
                                 </div>
                             </label>
+
+                            <label className="role-option">
+                                <input
+                                    type="radio"
+                                    name="role"
+                                    value="admin"
+                                    checked={role === 'admin'}
+                                    onChange={(e) => setRole(e.target.value)}
+                                />
+                                <div className="role-card">
+                                    <span>{t('admin')}</span>
+                                </div>
+                            </label>
                         </div>
                     </div>
 
