@@ -52,15 +52,12 @@ export default function SMSDemo() {
                         className={`btn sms-btn ${isSending ? 'loading' : ''}`}
                         disabled={isSending || !phone}
                         style={{
-                            background: 'var(--primary)',
-                            color: 'white',
-                            border: 'none',
                             height: '48px',
-                            boxShadow: '0 4px 12px rgba(30, 77, 43, 0.2)'
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
                         }}
                     >
                         {isSending ? (
-                            <span className="spinner-small" style={{ borderColor: 'rgba(255,255,255,0.2)', borderTopColor: '#fff' }}></span>
+                            <span className="spinner-small" style={{ borderColor: 'rgba(0,0,0,0.1)', borderTopColor: 'var(--primary)' }}></span>
                         ) : (
                             'Send Price Update'
                         )}

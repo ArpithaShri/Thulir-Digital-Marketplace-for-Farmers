@@ -768,7 +768,8 @@ select:focus {
   font-family: 'Outfit', sans-serif !important;
   font-size: 0.9rem !important;
   background: white !important;
-  border: 1px solid var(--border) !important;
+  color: var(--primary) !important;
+  border: 1px solid var(--primary) !important;
   font-weight: 700 !important;
 }
 
