@@ -134,12 +134,6 @@ export default function FarmerDashboard({ userData }) {
                 </button>
             </div>
 
-            {/* Decision Tools & Market Insight - Repositioned below Stats */}
-            <div className="portal-strategy-row animate-slide-up" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '32px', marginBottom: '40px' }}>
-                <SMSDemo />
-                <PriceIntelligence />
-            </div>
-
             <div className="portal-main-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '40px', alignItems: 'flex-start' }}>
                 <div className="portal-body" style={{ minWidth: 0 }}>
                     {showForm && (
@@ -249,6 +243,12 @@ export default function FarmerDashboard({ userData }) {
                 <aside className="farmer-sidebar" style={{ width: '320px', flexShrink: 0 }}>
                     <FinancialAdvisory userData={userData} listings={listings} />
                 </aside>
+            </div>
+
+            {/* Decision Tools & Market Insight - Repositioned at the bottom for better data flow */}
+            <div className="portal-strategy-row animate-slide-up" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '32px', marginTop: '60px' }}>
+                <SMSDemo />
+                <PriceIntelligence />
             </div>
         </div>
     );

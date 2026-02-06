@@ -106,6 +106,31 @@ export default function BuyerDashboard({ userData }) {
                 </button>
             </div>
 
+            {/* Quick Stats for Buyer */}
+            <div className="stats-banner">
+                <div className="stat-pill glass-card">
+                    <div className="pill-icon" style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6' }}>📢</div>
+                    <div className="pill-text">
+                        <span className="pill-label">{t('my_demands')}</span>
+                        <span className="pill-value">2</span>
+                    </div>
+                </div>
+                <div className="stat-pill glass-card">
+                    <div className="pill-icon" style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e' }}>🌾</div>
+                    <div className="pill-text">
+                        <span className="pill-label">{t('available_crops')}</span>
+                        <span className="pill-value">{listings.length}</span>
+                    </div>
+                </div>
+                <div className="stat-pill glass-card">
+                    <div className="pill-icon" style={{ background: 'rgba(249, 115, 22, 0.1)', color: '#f97316' }}>🛡️</div>
+                    <div className="pill-text">
+                        <span className="pill-label">{t('verified_farmers')}</span>
+                        <span className="pill-value">{listings.filter(l => l.farmerVerified).length}</span>
+                    </div>
+                </div>
+            </div>
+
             {showDemandForm ? (
                 <div className="animate-slide-down">
                     <DemandPostingForm userData={userData} onComplete={() => setShowDemandForm(false)} />
@@ -156,12 +181,6 @@ export default function BuyerDashboard({ userData }) {
                         <button className="btn btn-secondary" onClick={clearFilters} style={{ height: '52px', padding: '0 20px' }}>
                             Reset
                         </button>
-                    </div>
-
-                    {/* Decision Tools & Market Insight - For Consistency */}
-                    <div className="portal-strategy-row animate-slide-up" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '32px', marginBottom: '40px' }}>
-                        <SMSDemo />
-                        <PriceIntelligence />
                     </div>
 
                     <div className="listings-section glass-card">
@@ -246,8 +265,15 @@ export default function BuyerDashboard({ userData }) {
                         )}
                     </div>
                 </div>
-            )
-            }
-        </div >
+            )}
+
+            {/* Decision Tools & Market Insight - Repositioned at the bottom */}
+            {!showDemandForm && !disputeItem && (
+                <div className="portal-strategy-row animate-slide-up" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '32px', marginTop: '60px' }}>
+                    <SMSDemo />
+                    <PriceIntelligence />
+                </div>
+            )}
+        </div>
     );
 }
