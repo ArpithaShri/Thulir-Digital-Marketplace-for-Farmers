@@ -3,6 +3,8 @@ import { db, auth } from '../firebase';
 import { collection, query, onSnapshot, orderBy, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
 import DemandPostingForm from './DemandPostingForm';
+import VerificationBadge from './trust/VerificationBadge';
+import DisputeForm from './trust/DisputeForm';
 
 export default function BuyerDashboard({ userData }) {
     const { t } = useTranslation();
@@ -22,6 +24,7 @@ export default function BuyerDashboard({ userData }) {
     });
 
     const [bidInputs, setBidInputs] = useState({}); // { listingId: amount }
+    const [disputeItem, setDisputeItem] = useState(null); // Item being reported
 
     useEffect(() => {
         const q = query(collection(db, 'listings'), orderBy('createdAt', 'desc'));
@@ -100,6 +103,15 @@ export default function BuyerDashboard({ userData }) {
             {showDemandForm ? (
                 <div className="animate-slide-down">
                     <DemandPostingForm userData={userData} onComplete={() => setShowDemandForm(false)} />
+                </div>
+            ) : disputeItem ? (
+                <div className="animate-fade-in" style={{ padding: '40px 0' }}>
+                    <DisputeForm
+                        listingId={disputeItem.id}
+                        reportedAgainstId={disputeItem.farmerId}
+                        reportedAgainstName={disputeItem.farmerName}
+                        onClose={() => setDisputeItem(null)}
+                    />
                 </div>
             ) : (
                 <div className="marketplace-container">
@@ -196,11 +208,23 @@ export default function BuyerDashboard({ userData }) {
                                                     <div className="farmer-info">
                                                         <div className="avatar-micro">{item.farmerName.charAt(0)}</div>
                                                         <div className="farmer-details">
-                                                            <span className="name">{item.farmerName}</span>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                                <span className="name">{item.farmerName}</span>
+                                                                <VerificationBadge verified={item.farmerVerified !== false} size="sm" />
+                                                            </div>
                                                             <span className="loc">📍 {item.location || 'Rural India'}</span>
                                                         </div>
                                                     </div>
-                                                    <button className="btn-buy-mini">Contact Farmer</button>
+                                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                                        <button className="btn-buy-mini">Contact</button>
+                                                        <button
+                                                            className="btn-buy-mini"
+                                                            style={{ background: 'transparent', color: '#ef4444', borderColor: '#ef4444' }}
+                                                            onClick={() => setDisputeItem(item)}
+                                                        >
+                                                            🚩
+                                                        </button>
+                                                    </div>
                                                 </>
                                             )}
                                         </div>

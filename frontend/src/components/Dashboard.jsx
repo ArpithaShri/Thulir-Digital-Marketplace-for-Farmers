@@ -6,11 +6,14 @@ import FarmerDashboard from './FarmerDashboard';
 import BuyerDashboard from './BuyerDashboard';
 import SMSDemo from './SMSDemo';
 import PriceIntelligence from './PriceIntelligence';
+import VerificationBadge from './trust/VerificationBadge';
+import DisputesList from './trust/DisputesList';
 
 export default function Dashboard({ user }) {
     const { t } = useTranslation();
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [view, setView] = useState('main'); // 'main' or 'disputes'
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -65,8 +68,11 @@ export default function Dashboard({ user }) {
                             {userData.name.charAt(0).toUpperCase()}
                         </div>
                         <div className="user-details-mini">
-                            <span className="user-name">{userData.name}</span>
-                            <span className="user-role">{t(userData.role)}</span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span className="user-name">{userData.name}</span>
+                                <VerificationBadge verified={userData.verified !== false} size="sm" />
+                            </div>
+                            <span className="user-role">{t(userData.role)} • 📍 {userData.location}</span>
                         </div>
                     </div>
                     <button className="btn-logout" onClick={() => auth.signOut()}>
@@ -78,10 +84,33 @@ export default function Dashboard({ user }) {
             <main className="dashboard-layout">
                 {/* Main Content Area */}
                 <div className="dashboard-content-area">
-                    {userData.role === 'farmer' ? (
-                        <FarmerDashboard userData={userData} />
+                    <div style={{ marginBottom: '20px', display: 'flex', gap: '12px' }}>
+                        <button
+                            className={`btn ${view === 'main' ? 'btn-primary' : 'btn-secondary'}`}
+                            onClick={() => setView('main')}
+                            style={{ width: 'auto', padding: '8px 16px' }}
+                        >
+                            🏠 Home
+                        </button>
+                        <button
+                            className={`btn ${view === 'disputes' ? 'btn-primary' : 'btn-secondary'}`}
+                            onClick={() => setView('disputes')}
+                            style={{ width: 'auto', padding: '8px 16px' }}
+                        >
+                            🛡️ Safety & Disputes
+                        </button>
+                    </div>
+
+                    {view === 'main' ? (
+                        userData.role === 'farmer' ? (
+                            <FarmerDashboard userData={userData} />
+                        ) : (
+                            <BuyerDashboard userData={userData} />
+                        )
                     ) : (
-                        <BuyerDashboard userData={userData} />
+                        <div className="animate-fade-in">
+                            <DisputesList isAdmin={true} /> {/* isAdmin={true} for demo convenience */}
+                        </div>
                     )}
                 </div>
 

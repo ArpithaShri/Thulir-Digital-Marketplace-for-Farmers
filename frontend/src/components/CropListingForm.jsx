@@ -23,6 +23,7 @@ export default function CropListingForm({ userData, onComplete }) {
             await addDoc(collection(db, 'listings'), {
                 farmerId: auth.currentUser.uid,
                 farmerName: userData?.name || 'Farmer',
+                farmerVerified: userData?.verified !== false, // Use verified field from userData
                 cropType: crop,
                 quantity: quantity,
                 grade: grade,

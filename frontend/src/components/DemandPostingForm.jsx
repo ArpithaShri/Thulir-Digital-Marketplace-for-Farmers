@@ -18,6 +18,7 @@ export default function DemandPostingForm({ userData, onComplete }) {
             await addDoc(collection(db, 'demands'), {
                 buyerId: auth.currentUser.uid,
                 buyerName: userData.name,
+                buyerVerified: userData.verified !== false,
                 location: userData.location,
                 cropType: crop,
                 quantity: quantity,

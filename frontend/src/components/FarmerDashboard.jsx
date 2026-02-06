@@ -3,6 +3,8 @@ import { db, auth } from '../firebase';
 import { collection, query, where, onSnapshot, doc, deleteDoc, updateDoc, orderBy } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
 import CropListingForm from './CropListingForm';
+import VerificationBadge from './trust/VerificationBadge';
+import DisputeForm from './trust/DisputeForm';
 
 export default function FarmerDashboard({ userData }) {
     const { t } = useTranslation();
@@ -10,6 +12,7 @@ export default function FarmerDashboard({ userData }) {
     const [demands, setDemands] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [activeTab, setActiveTab] = useState('inventory'); // 'inventory' or 'demands'
+    const [disputeItem, setDisputeItem] = useState(null); // Item being reported
 
     useEffect(() => {
         if (!auth.currentUser) return;
@@ -99,6 +102,17 @@ export default function FarmerDashboard({ userData }) {
                     </div>
                 )}
 
+                {disputeItem && (
+                    <div className="animate-fade-in" style={{ marginBottom: '40px' }}>
+                        <DisputeForm
+                            listingId={disputeItem.id}
+                            reportedAgainstId={disputeItem.buyerId}
+                            reportedAgainstName={disputeItem.buyerName}
+                            onClose={() => setDisputeItem(null)}
+                        />
+                    </div>
+                )}
+
                 {activeTab === 'inventory' ? (
                     <div className="listings-section glass-card">
                         <div className="card-header">
@@ -155,7 +169,12 @@ export default function FarmerDashboard({ userData }) {
                                                 <h4>{item.cropType}</h4>
                                                 {item.urgency === 'urgent' && <span className="urgent-badge">URGENT</span>}
                                             </div>
-                                            <p>{item.quantity} • Needed by <strong>{item.buyerName}</strong> ({t(item.entityType || 'buyer')})</p>
+                                            <p style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
+                                                {item.quantity} • Needed by
+                                                <strong>{item.buyerName}</strong>
+                                                <VerificationBadge verified={item.buyerVerified !== false} size="sm" />
+                                                ({t(item.entityType || 'buyer')})
+                                            </p>
                                         </div>
                                         <div className="item-meta">
                                             <div className="item-price"><strong>Target: {item.targetPrice}</strong></div>
@@ -163,6 +182,14 @@ export default function FarmerDashboard({ userData }) {
                                         </div>
                                         <div className="item-actions">
                                             <button className="btn-buy-mini" style={{ background: 'var(--primary)', color: 'white', border: 'none' }}>Offer</button>
+                                            <button
+                                                className="btn-icon"
+                                                style={{ color: '#ef4444' }}
+                                                onClick={() => setDisputeItem(item)}
+                                                title="Report Issue"
+                                            >
+                                                🚩
+                                            </button>
                                         </div>
                                     </div>
                                 ))}
