@@ -1,0 +1,92 @@
+import React, { useMemo } from 'react';
+import { SCHEMES, ADVISORY_MESSAGES } from '../../data/advisoryData';
+
+const FinancialAdvisory = ({ userData, listings = [] }) => {
+    // Determine unique crops from listings
+    const farmerCrops = useMemo(() => {
+        const crops = listings.map(l => l.cropType.toLowerCase());
+        return [...new Set(crops)];
+    }, [listings]);
+
+    const farmerLocation = userData?.location || '';
+
+    // Rule-Based Eligibility Engine
+    const eligibleSchemes = useMemo(() => {
+        return SCHEMES.filter(scheme => {
+            const matchesState = scheme.eligibleStates.includes('Any') ||
+                scheme.eligibleStates.some(state => farmerLocation.includes(state));
+
+            const matchesCrop = scheme.eligibleCrops.includes('Any') ||
+                scheme.eligibleCrops.some(crop => farmerCrops.includes(crop.toLowerCase()));
+
+            return matchesState && (scheme.eligibleCrops.includes('Any') || farmerCrops.length > 0 ? matchesCrop : false);
+        });
+    }, [farmerCrops, farmerLocation]);
+
+    // Advisory Logic
+    const relevantAdvisories = useMemo(() => {
+        return ADVISORY_MESSAGES.filter(adv => {
+            return adv.crop === 'Any' || farmerCrops.includes(adv.crop.toLowerCase());
+        });
+    }, [farmerCrops]);
+
+    return (
+        <div className="financial-advisory-section">
+            <h4 className="section-title">📊 Financial & Advisory</h4>
+
+            {/* Subsidy & Scheme Alerts */}
+            <div className="advisory-group" style={{ marginBottom: '24px' }}>
+                <h5 style={{ fontSize: '0.8rem', color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    🎁 Eligible Schemes ({eligibleSchemes.length})
+                </h5>
+                {eligibleSchemes.length === 0 ? (
+                    <div className="glass-card" style={{ padding: '16px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                        Add crops to your inventory to see eligible government schemes.
+                    </div>
+                ) : (
+                    <div style={{ display: 'grid', gap: '12px' }}>
+                        {eligibleSchemes.map(scheme => (
+                            <div key={scheme.schemeId} className="glass-card animate-slide-up" style={{ padding: '16px', borderLeft: '4px solid var(--accent)', background: 'rgba(245, 158, 11, 0.05)' }}>
+                                <h6 style={{ margin: '0 0 4px 0', fontSize: '0.9rem', color: 'var(--text-main)' }}>{scheme.schemeName}</h6>
+                                <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{scheme.description}</p>
+                                <button style={{ marginTop: '8px', padding: '4px 10px', fontSize: '0.7rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Apply Details</button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {/* Advisory Messages */}
+            <div className="advisory-group">
+                <h5 style={{ fontSize: '0.8rem', color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    💡 Smart Advisory
+                </h5>
+                <div style={{ display: 'grid', gap: '12px' }}>
+                    {relevantAdvisories.length > 0 ? (
+                        relevantAdvisories.map(adv => (
+                            <div key={adv.messageId} className="glass-card animate-fade-in" style={{ padding: '16px', borderLeft: '4px solid var(--primary)', background: 'var(--panel)' }}>
+                                <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                                    <span style={{ fontSize: '1.2rem' }}>📢</span>
+                                    <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-main)', lineHeight: '1.4' }}>
+                                        {adv.messageText}
+                                    </p>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="glass-card" style={{ padding: '16px', background: 'var(--panel)' }}>
+                            <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                                <span style={{ fontSize: '1.2rem' }}>⛅</span>
+                                <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                                    Weather is stable. Market conditions are normal for your region.
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default FinancialAdvisory;

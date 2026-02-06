@@ -961,8 +961,13 @@ select:focus {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .animate-slide-down {
@@ -970,8 +975,15 @@ select:focus {
 }
 
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Custom styles for verification badge pulse if needed */
@@ -1015,4 +1027,17 @@ select:focus {
 .btn-buy-mini:hover {
   background: var(--primary);
   color: white;
+}
+
+.farmer-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: sticky;
+  top: 100px;
+}
+
+.advisory-group h5 {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.5px;
 }
