@@ -49,7 +49,6 @@ export default function CropListingForm({ userData, onComplete }) {
         <div className="crop-form-container glass-card animate-slide-down" style={{ padding: '40px', border: '1px solid rgba(30, 77, 43, 0.1)' }}>
             <div style={{ marginBottom: '32px' }}>
                 <h3 style={{ fontSize: '1.8rem', display: 'flex', alignItems: 'center', gap: '15px' }}>
-                    <div style={{ background: 'rgba(45, 90, 39, 0.1)', padding: '10px', borderRadius: '14px' }}>🌱</div>
                     {t('post_crop')}
                 </h3>
             </div>

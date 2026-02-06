@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import DemandPostingForm from './DemandPostingForm';
 import VerificationBadge from './trust/VerificationBadge';
 import DisputeForm from './trust/DisputeForm';
+import SMSDemo from './SMSDemo';
+import PriceIntelligence from './PriceIntelligence';
 import { MOCK_LISTINGS } from '../data/mockData';
 
 export default function BuyerDashboard({ userData }) {
@@ -100,7 +102,7 @@ export default function BuyerDashboard({ userData }) {
                     </p>
                 </div>
                 <button className="btn btn-primary" onClick={() => setShowDemandForm(!showDemandForm)} style={{ height: 'auto', padding: '16px 32px' }}>
-                    {showDemandForm ? `✕ ${t('close')}` : `➕ ${t('post_demand')}`}
+                    {showDemandForm ? t('close') : t('post_demand')}
                 </button>
             </div>
 
@@ -152,13 +154,19 @@ export default function BuyerDashboard({ userData }) {
                             {t('search_btn')}
                         </button>
                         <button className="btn btn-secondary" onClick={clearFilters} style={{ height: '52px', padding: '0 20px' }}>
-                            🔄
+                            Reset
                         </button>
+                    </div>
+
+                    {/* Decision Tools & Market Insight - For Consistency */}
+                    <div className="portal-strategy-row animate-slide-up" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '32px', marginBottom: '40px' }}>
+                        <SMSDemo />
+                        <PriceIntelligence />
                     </div>
 
                     <div className="listings-section glass-card">
                         <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <h3 style={{ fontFamily: 'Outfit' }}>🌾 {t('view_supply')}</h3>
+                            <h3 style={{ fontFamily: 'Outfit' }}>{t('view_supply')}</h3>
                             <span className="status-badge" style={{ background: 'var(--panel)', padding: '6px 16px', borderRadius: '50px', color: 'var(--text-muted)' }}>
                                 {t('showing')} {filteredListings.length} {t('offers')}
                             </span>
@@ -175,7 +183,7 @@ export default function BuyerDashboard({ userData }) {
                                         <div className="market-card-header">
                                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                                 <span className="crop-tag">{item.cropType}</span>
-                                                {item.auctionActive && <span className="urgent-badge" style={{ background: '#fef3c7', color: '#d97706' }}>{t('live')} 🔨</span>}
+                                                {item.auctionActive && <span className="urgent-badge" style={{ background: '#fef3c7', color: '#d97706' }}>{t('live')}</span>}
                                             </div>
                                             <span className={`grade-tag ${item.grade}`}>{t(item.grade).split(' ')[0]}</span>
                                         </div>
@@ -216,7 +224,7 @@ export default function BuyerDashboard({ userData }) {
                                                                 <span className="name">{item.farmerName}</span>
                                                                 <VerificationBadge verified={item.farmerVerified !== false} size="sm" />
                                                             </div>
-                                                            <span className="loc">📍 {item.location || t('rural_india')}</span>
+                                                            <span className="loc">{item.location || t('rural_india')}</span>
                                                         </div>
                                                     </div>
                                                     <div style={{ display: 'flex', gap: '8px' }}>
@@ -226,7 +234,7 @@ export default function BuyerDashboard({ userData }) {
                                                             style={{ background: 'transparent', color: '#ef4444', borderColor: '#ef4444' }}
                                                             onClick={() => setDisputeItem(item)}
                                                         >
-                                                            🚩
+                                                            Report
                                                         </button>
                                                     </div>
                                                 </>
@@ -238,7 +246,8 @@ export default function BuyerDashboard({ userData }) {
                         )}
                     </div>
                 </div>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 }

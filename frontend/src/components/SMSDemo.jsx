@@ -23,7 +23,7 @@ export default function SMSDemo() {
     return (
         <div className="sms-widget glass-card">
             <div className="widget-header">
-                <div className="widget-icon" style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6' }}>📟</div>
+                <div className="widget-icon" style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', fontSize: '1rem', fontWeight: 'bold' }}>SMS</div>
                 <div className="widget-title">
                     <h4 style={{ fontFamily: 'Outfit' }}>{t('sms_demo')}</h4>
                     <span style={{ fontSize: '0.65rem', fontWeight: '700', color: 'var(--text-muted)' }}>OFFLINE ACCESS BRIDGE</span>

@@ -41,7 +41,6 @@ export default function DemandPostingForm({ userData, onComplete }) {
         <div className="demand-form-container glass-card animate-slide-down" style={{ padding: '40px', border: '1px solid rgba(59, 130, 246, 0.1)' }}>
             <div style={{ marginBottom: '32px' }}>
                 <h3 style={{ fontSize: '1.8rem', display: 'flex', alignItems: 'center', gap: '15px' }}>
-                    <div style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '10px', borderRadius: '14px' }}>📢</div>
                     {t('post_demand')}
                 </h3>
             </div>

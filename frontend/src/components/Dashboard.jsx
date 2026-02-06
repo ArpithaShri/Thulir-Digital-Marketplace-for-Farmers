@@ -9,6 +9,8 @@ import PriceIntelligence from './PriceIntelligence';
 import VerificationBadge from './trust/VerificationBadge';
 import DisputesList from './trust/DisputesList';
 
+import LanguageSelector from './LanguageSelector';
+
 export default function Dashboard({ user }) {
     const { t } = useTranslation();
     const [userData, setUserData] = useState(null);
@@ -58,7 +60,7 @@ export default function Dashboard({ user }) {
             <header className="dashboard-header glass-card animate-slide-down">
                 <div className="brand">
                     <div className="logo-icon-wrapper">
-                        <span className="logo-icon">🌿</span>
+                        <div className="brand-leaf-icon"></div>
                     </div>
                     <div className="logo-name">
                         <h1 className="logo-text">Thulir</h1>
@@ -71,17 +73,18 @@ export default function Dashboard({ user }) {
                         className={`nav-link ${view === 'main' ? 'active' : ''}`}
                         onClick={() => setView('main')}
                     >
-                        <span>🏠</span> {t('home')}
+                        {t('home')}
                     </button>
                     <button
                         className={`nav-link ${view === 'disputes' ? 'active' : ''}`}
                         onClick={() => setView('disputes')}
                     >
-                        <span>🛡️</span> {t('report_issue')}
+                        {t('report_issue')}
                     </button>
                 </div>
 
                 <div className="user-nav">
+                    <LanguageSelector />
                     <div className="user-profile-mini">
                         <div className="avatar-mini">
                             {userData.name.charAt(0).toUpperCase()}
@@ -100,7 +103,7 @@ export default function Dashboard({ user }) {
                 </div>
             </header>
 
-            <main className="dashboard-layout">
+            <main className="dashboard-layout-single">
                 {/* Main Content Area */}
                 <div className="dashboard-content-area">
                     {view === 'main' ? (
@@ -114,20 +117,8 @@ export default function Dashboard({ user }) {
                             <DisputesList isAdmin={true} /> {/* isAdmin={true} for demo convenience */}
                         </div>
                     )}
+
                 </div>
-
-                {/* Sidebar for Decision Support Tools */}
-                <aside className="dashboard-sidebar">
-                    <div className="sidebar-section">
-                        <h4 className="section-title">Decision Tools</h4>
-                        <SMSDemo />
-                    </div>
-
-                    <div className="sidebar-section">
-                        <h4 className="section-title">Market Insight</h4>
-                        <PriceIntelligence />
-                    </div>
-                </aside>
             </main>
         </div>
     );

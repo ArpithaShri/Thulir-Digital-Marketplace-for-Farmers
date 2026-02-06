@@ -64,7 +64,6 @@ export default function Login() {
                                     onChange={(e) => setRole(e.target.value)}
                                 />
                                 <div className="role-card">
-                                    <span className="icon">👨‍🌾</span>
                                     <span>{t('farmer')}</span>
                                 </div>
                             </label>
@@ -78,7 +77,6 @@ export default function Login() {
                                     onChange={(e) => setRole(e.target.value)}
                                 />
                                 <div className="role-card">
-                                    <span className="icon">🛍️</span>
                                     <span>{t('buyer')}</span>
                                 </div>
                             </label>
@@ -127,7 +125,7 @@ export default function Login() {
 
                     <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px border-subtle var(--border-color)', textAlign: 'center' }}>
                         <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px' }}>
-                            🚀 {t('demo_msg')}
+                            {t('demo_msg')}
                         </p>
                         <button
                             type="button"
@@ -158,7 +156,7 @@ export default function Login() {
                                 }
                             }}
                         >
-                            ⚡ {t('demo_btn')}
+                            {t('demo_btn')}
                         </button>
                     </div>
                 </form>

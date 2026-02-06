@@ -38,7 +38,7 @@ const DisputeForm = ({ listingId, reportedAgainstId, reportedAgainstName, onClos
     if (success) {
         return (
             <div className="glass-card animate-fade-in" style={{ padding: '24px', textAlign: 'center', borderColor: '#22c55e' }}>
-                <span style={{ fontSize: '48px' }}>✅</span>
+                <div style={{ fontSize: '48px', color: '#22c55e', marginBottom: '16px' }}>✓</div>
                 <h3>{t('dispute_submitted')}</h3>
                 <p>{t('review_shortly')}</p>
             </div>

@@ -41,7 +41,7 @@ export default function PriceIntelligence() {
         <div className="price-intelligence-card glass-card">
             <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                 <h3 style={{ fontFamily: 'Outfit', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{ fontSize: '1.5rem' }}>📈</span> {t('market_trends')}
+                    {t('market_trends')}
                 </h3>
                 <select
                     value={selectedCrop}
@@ -58,7 +58,7 @@ export default function PriceIntelligence() {
                 </div>
             ) : error ? (
                 <div style={{ height: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px', textAlign: 'center' }}>
-                    <span style={{ fontSize: '2rem', marginBottom: '10px' }}>⚠️</span>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#ef4444', marginBottom: '10px' }}>Error</span>
                     <p style={{ color: '#ef4444', fontSize: '0.9rem' }}>{error}</p>
                     <button className="btn btn-secondary" onClick={fetchInsights} style={{ marginTop: '10px', width: 'auto' }}>Retry</button>
                 </div>
@@ -79,7 +79,7 @@ export default function PriceIntelligence() {
                                 fontSize: '0.85rem',
                                 fontWeight: '700'
                             }}>
-                                {prediction?.trend === 'Upward' ? '↗ Increasing' : '↘ Decreasing'}
+                                {prediction?.trend === 'Upward' ? 'Increasing' : 'Decreasing'}
                             </span>
                         </div>
                         <div className="pred-item glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'center', border: '1px solid var(--border)' }}>

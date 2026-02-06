@@ -30,11 +30,13 @@ function App() {
 
   return (
     <div className="app-container">
-      <LanguageSelector />
       {user ? (
         <Dashboard user={user} />
       ) : (
-        <Login />
+        <>
+          <LanguageSelector />
+          <Login />
+        </>
       )}
       <VoiceAssistant />
     </div>

@@ -7,6 +7,8 @@ import CropListingForm from './CropListingForm';
 import VerificationBadge from './trust/VerificationBadge';
 import DisputeForm from './trust/DisputeForm';
 import FinancialAdvisory from './trust/FinancialAdvisory';
+import SMSDemo from './SMSDemo';
+import PriceIntelligence from './PriceIntelligence';
 import { MOCK_LISTINGS, MOCK_DEMANDS } from '../data/mockData';
 
 export default function FarmerDashboard({ userData }) {
@@ -95,10 +97,10 @@ export default function FarmerDashboard({ userData }) {
                 <div className="header-actions">
                     <div className="tab-switcher glass-card">
                         <button className={activeTab === 'inventory' ? 'active' : ''} onClick={() => setActiveTab('inventory')}>
-                            📦 {t('my_inventory')}
+                            {t('my_inventory')}
                         </button>
                         <button className={activeTab === 'demands' ? 'active' : ''} onClick={() => setActiveTab('demands')}>
-                            📢 {t('view_demand')}
+                            {t('view_demand')}
                         </button>
                     </div>
                 </div>
@@ -107,29 +109,35 @@ export default function FarmerDashboard({ userData }) {
             {/* Quick Stats */}
             <div className="stats-banner">
                 <div className="stat-pill glass-card">
-                    <div className="pill-icon">💰</div>
+                    <div className="pill-icon" style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e' }}>₹</div>
                     <div className="pill-text">
                         <span className="pill-label">{t('total_earnings')}</span>
                         <span className="pill-value">₹45,200</span>
                     </div>
                 </div>
                 <div className="stat-pill glass-card">
-                    <div className="pill-icon">📦</div>
+                    <div className="pill-icon" style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6' }}>📦</div>
                     <div className="pill-text">
                         <span className="pill-label">{t('active_listings')}</span>
                         <span className="pill-value">{listings.length}</span>
                     </div>
                 </div>
                 <div className="stat-pill glass-card">
-                    <div className="pill-icon">🔥</div>
+                    <div className="pill-icon" style={{ background: 'rgba(249, 115, 22, 0.1)', color: '#f97316' }}>�</div>
                     <div className="pill-text">
                         <span className="pill-label">{t('open_demands')}</span>
                         <span className="pill-value">{demands.length}</span>
                     </div>
                 </div>
-                <button className="btn btn-primary" onClick={() => setShowForm(!showForm)} style={{ height: 'auto', padding: '24px' }}>
-                    {showForm ? `✕ ${t('close')}` : `➕ ${t('post_crop')}`}
+                <button className="btn btn-primary" onClick={() => setShowForm(!showForm)} style={{ height: 'auto', padding: '24px', position: 'relative' }}>
+                    {showForm ? t('close') : t('post_crop')}
                 </button>
+            </div>
+
+            {/* Decision Tools & Market Insight - Repositioned below Stats */}
+            <div className="portal-strategy-row animate-slide-up" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '32px', marginBottom: '40px' }}>
+                <SMSDemo />
+                <PriceIntelligence />
             </div>
 
             <div className="portal-main-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '40px', alignItems: 'flex-start' }}>
@@ -154,7 +162,7 @@ export default function FarmerDashboard({ userData }) {
                     {activeTab === 'inventory' ? (
                         <div className="listings-section glass-card">
                             <div className="card-header">
-                                <h3 style={{ fontFamily: 'Outfit' }}>📜 {t('my_listings')}</h3>
+                                <h3 style={{ fontFamily: 'Outfit' }}>{t('my_listings')}</h3>
                             </div>
                             {listings.length === 0 ? (
                                 <div style={{ padding: '60px', textAlign: 'center' }}><p>{t('no_listings')}</p></div>
@@ -164,7 +172,7 @@ export default function FarmerDashboard({ userData }) {
                                         <div key={item.id} className="listing-row">
                                             <div className="item-info">
                                                 <h4>{item.cropType}</h4>
-                                                <p>{item.quantity} • {t(item.grade)} • 📍 {item.location || t('unknown')}</p>
+                                                <p>{item.quantity} • {t(item.grade)} • {item.location || t('unknown')}</p>
                                             </div>
                                             <div className="item-meta">
                                                 <div className="item-price">
@@ -179,12 +187,12 @@ export default function FarmerDashboard({ userData }) {
                                             </div>
                                             <div className="item-actions">
                                                 {item.auctionActive && (
-                                                    <button onClick={() => handleCloseAuction(item.id)} className="btn-icon" title="Close Auction">🔨</button>
+                                                    <button onClick={() => handleCloseAuction(item.id)} className="btn-icon" title="Close Auction" style={{ color: 'var(--accent)' }}>Hammer</button>
                                                 )}
                                                 <button onClick={() => toggleStatus(item)} className="btn-icon">
-                                                    {item.status === 'available' ? '✅' : '🔄'}
+                                                    {item.status === 'available' ? 'Mark Sold' : 'Make Available'}
                                                 </button>
-                                                <button onClick={() => handleDelete(item.id)} className="btn-icon delete">🗑️</button>
+                                                <button onClick={() => handleDelete(item.id)} className="btn-icon delete">Delete</button>
                                             </div>
                                         </div>
                                     ))}
@@ -194,7 +202,7 @@ export default function FarmerDashboard({ userData }) {
                     ) : (
                         <div className="demands-section glass-card">
                             <div className="card-header">
-                                <h3 style={{ fontFamily: 'Outfit' }}>📢 {t('view_demand')}</h3>
+                                <h3 style={{ fontFamily: 'Outfit' }}>{t('view_demand')}</h3>
                             </div>
                             {demands.length === 0 ? (
                                 <div style={{ padding: '60px', textAlign: 'center' }}><p>{t('no_demands')}</p></div>
@@ -216,7 +224,7 @@ export default function FarmerDashboard({ userData }) {
                                             </div>
                                             <div className="item-meta">
                                                 <div className="item-price"><strong>Target: {item.targetPrice}</strong></div>
-                                                <span className="location-tag">📍 {item.location}</span>
+                                                <span className="location-tag">{item.location}</span>
                                             </div>
                                             <div className="item-actions">
                                                 <button className="btn-buy-mini" style={{ background: 'var(--primary)', color: 'white', border: 'none' }}>{t('offer')}</button>

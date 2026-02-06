@@ -62,7 +62,13 @@ export default function VoiceAssistant() {
                 onClick={startListening}
                 title={t('voice_search')}
             >
-                <span className="icon">{isListening ? '🛑' : '🎙️'}</span>
+                <span className="icon">
+                    {isListening ? (
+                        <div className="stop-icon"></div>
+                    ) : (
+                        <div className="mic-icon"></div>
+                    )}
+                </span>
             </button>
             {transcript && <p className="transcript-preview">"{transcript}"</p>}
         </div>

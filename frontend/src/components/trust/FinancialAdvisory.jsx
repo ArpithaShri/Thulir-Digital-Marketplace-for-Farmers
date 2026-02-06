@@ -24,12 +24,12 @@ const FinancialAdvisory = ({ userData, listings = [] }) => {
 
     return (
         <div className="financial-advisory-section">
-            <h4 className="section-title">📊 {t('financial_advisory')}</h4>
+            <h4 className="section-title">{t('financial_advisory')}</h4>
 
             {/* Subsidy & Scheme Alerts */}
             <div className="advisory-group" style={{ marginBottom: '24px' }}>
                 <h5 style={{ fontSize: '0.8rem', color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    🎁 {t('eligible_schemes')} ({eligibleSchemes.length})
+                    {t('eligible_schemes')} ({eligibleSchemes.length})
                 </h5>
                 {eligibleSchemes.length === 0 ? (
                     <div className="glass-card" style={{ padding: '16px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
@@ -51,14 +51,14 @@ const FinancialAdvisory = ({ userData, listings = [] }) => {
             {/* Advisory Messages */}
             <div className="advisory-group">
                 <h5 style={{ fontSize: '0.8rem', color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    💡 {t('smart_advisory')}
+                    {t('smart_advisory')}
                 </h5>
                 <div style={{ display: 'grid', gap: '12px' }}>
                     {relevantAdvisories.length > 0 ? (
                         relevantAdvisories.map(adv => (
                             <div key={adv.messageId} className="glass-card animate-fade-in" style={{ padding: '16px', borderLeft: '4px solid var(--primary)', background: 'var(--panel)' }}>
                                 <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                                    <span style={{ fontSize: '1.2rem' }}>📢</span>
+                                    <span style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--primary)' }}>INFO</span>
                                     <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-main)', lineHeight: '1.4' }}>
                                         {adv.messageText}
                                     </p>
@@ -68,7 +68,7 @@ const FinancialAdvisory = ({ userData, listings = [] }) => {
                     ) : (
                         <div className="glass-card" style={{ padding: '16px', background: 'var(--panel)' }}>
                             <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                                <span style={{ fontSize: '1.2rem' }}>⛅</span>
+                                <span style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--text-muted)' }}>STATUS</span>
                                 <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
                                     {t('stable_weather')}
                                 </p>
