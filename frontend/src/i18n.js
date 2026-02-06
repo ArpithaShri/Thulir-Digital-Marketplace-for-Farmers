@@ -5,7 +5,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 const resources = {
     en: {
         translation: {
-            welcome: "Welcome to KisanSetu",
+            welcome: "Welcome to Thulir",
             subtitle: "Bridging Farms to Markets",
             login_as: "I want to join as",
             farmer: "Farmer",
@@ -58,7 +58,7 @@ const resources = {
     },
     ta: {
         translation: {
-            welcome: "கிசான்சேது-க்கு வரவேற்கிறோம்",
+            welcome: "துளிர்-க்கு வரவேற்கிறோம்",
             subtitle: "விவசாய நிலங்களை சந்தையுடன் இணைக்கிறது",
             login_as: "நான் இணைய விரும்புகிறேன்",
             farmer: "விவசாயி",

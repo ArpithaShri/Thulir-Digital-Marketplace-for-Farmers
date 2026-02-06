@@ -127,7 +127,7 @@ export default function Login() {
 
                     <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px border-subtle var(--border-color)', textAlign: 'center' }}>
                         <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px' }}>
-                            🚀 Presenting KisanSetu? Use the demo mode for a pre-configured experience.
+                            🚀 Presenting Thulir? Use the demo mode for a pre-configured experience.
                         </p>
                         <button
                             type="button"

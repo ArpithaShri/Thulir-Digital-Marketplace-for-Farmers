@@ -58,7 +58,7 @@ export default function Dashboard({ user }) {
             <header className="dashboard-header glass-card">
                 <div className="brand">
                     <span className="logo-icon">🚜</span>
-                    <h1 className="logo-text">KisanSetu</h1>
+                    <h1 className="logo-text">Thulir</h1>
                 </div>
 
                 <div className="user-nav">
