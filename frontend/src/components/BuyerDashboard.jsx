@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { db, auth } from '../firebase';
-import { collection, query, onSnapshot, orderBy, addDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { auth } from '../firebase';
+import { subscribeToAllListings } from '../services/listingService';
+import { placeBid } from '../services/auctionService';
 import { useTranslation } from 'react-i18next';
 import DemandPostingForm from './DemandPostingForm';
 import VerificationBadge from './trust/VerificationBadge';
@@ -10,6 +11,8 @@ export default function BuyerDashboard({ userData }) {
     const { t } = useTranslation();
     const [listings, setListings] = useState([]);
     const [showDemandForm, setShowDemandForm] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     // UI Local state for inputs
     const [searchTerm, setSearchTerm] = useState('');
@@ -27,9 +30,10 @@ export default function BuyerDashboard({ userData }) {
     const [disputeItem, setDisputeItem] = useState(null); // Item being reported
 
     useEffect(() => {
-        const q = query(collection(db, 'listings'), orderBy('createdAt', 'desc'));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            setListings(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        setLoading(true);
+        const unsubscribe = subscribeToAllListings((data) => {
+            setListings(data);
+            setLoading(false);
         });
         return () => unsubscribe();
     }, []);
@@ -42,21 +46,9 @@ export default function BuyerDashboard({ userData }) {
         }
 
         try {
-            // Update listing with new highest bid
-            await updateDoc(doc(db, 'listings', listingId), {
-                highestBid: amount,
-                highestBidder: userData.name
-            });
-
-            // Log the bid in subcollection
-            await addDoc(collection(db, 'listings', listingId, 'bids'), {
-                bidderId: auth.currentUser.uid,
-                bidderName: userData.name,
-                bidAmount: amount,
-                timestamp: serverTimestamp()
-            });
-
+            await placeBid(listingId, auth.currentUser.uid, userData.name, amount);
             alert("Bid placed successfully!");
+            setBidInputs({ ...bidInputs, [listingId]: '' });
         } catch (err) {
             console.error("Bidding error:", err);
             alert("Failed to place bid.");

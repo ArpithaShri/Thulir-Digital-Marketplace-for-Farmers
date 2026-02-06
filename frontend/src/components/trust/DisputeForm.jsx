@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { db, auth } from '../../firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { auth } from '../../firebase';
+import { submitDispute } from '../../services/disputeService';
 
 const DisputeForm = ({ listingId, reportedAgainstId, reportedAgainstName, onClose }) => {
     const [reason, setReason] = useState('');
@@ -13,23 +12,21 @@ const DisputeForm = ({ listingId, reportedAgainstId, reportedAgainstName, onClos
 
         setSubmitting(true);
         try {
-            await addDoc(collection(db, 'disputes'), {
+            await submitDispute({
                 listingId: listingId || 'N/A',
                 reportedBy: auth.currentUser.uid,
                 reportedByName: auth.currentUser.displayName || 'Anonymous User',
                 reportedAgainst: reportedAgainstId,
                 reportedAgainstName: reportedAgainstName,
-                reason: reason,
-                status: 'OPEN',
-                createdAt: serverTimestamp()
+                reason: reason
             });
             setSuccess(true);
             setTimeout(() => {
                 if (onClose) onClose();
             }, 2000);
         } catch (err) {
-            console.error("Error submitting dispute:", err);
-            alert("Failed to submit dispute. Please try again.");
+            console.error("Dispute submission error:", err);
+            alert("Failed to submit report. " + err.message);
         } finally {
             setSubmitting(false);
         }

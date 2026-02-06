@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { db, auth } from '../firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { auth } from '../firebase';
+import { createListing } from '../services/listingService';
 import { useTranslation } from 'react-i18next';
 
 export default function CropListingForm({ userData, onComplete }) {
@@ -20,10 +20,10 @@ export default function CropListingForm({ userData, onComplete }) {
         const numericPrice = parseFloat(price.replace(/[^0-9.]/g, ''));
 
         try {
-            await addDoc(collection(db, 'listings'), {
+            await createListing({
                 farmerId: auth.currentUser.uid,
                 farmerName: userData?.name || 'Farmer',
-                farmerVerified: userData?.verified !== false, // Use verified field from userData
+                farmerVerified: userData?.verified !== false,
                 cropType: crop,
                 quantity: quantity,
                 grade: grade,
@@ -31,9 +31,7 @@ export default function CropListingForm({ userData, onComplete }) {
                 basePrice: numericPrice || 0,
                 highestBid: numericPrice || 0,
                 auctionActive: isAuction,
-                location: location,
-                status: 'available',
-                createdAt: serverTimestamp()
+                location: location
             });
             setCrop('');
             setQuantity('');
@@ -41,7 +39,7 @@ export default function CropListingForm({ userData, onComplete }) {
             if (onComplete) onComplete();
         } catch (err) {
             console.error("Listing error:", err);
-            alert("Failed to list crop. Check console.");
+            alert("Failed to list crop. " + err.message);
         } finally {
             setLoading(false);
         }

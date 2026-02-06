@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { auth, db } from '../firebase';
+import { auth } from '../firebase';
 import { signInAnonymously } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { createUserProfile } from '../services/userService';
 import { useTranslation } from 'react-i18next';
 
 export default function Login() {
@@ -25,20 +24,18 @@ export default function Login() {
         try {
             const { user } = await signInAnonymously(auth);
 
-            // Create user document with entity type for buyers
-            await setDoc(doc(db, 'users', user.uid), {
+            await createUserProfile(user.uid, {
                 name,
                 role,
                 location,
                 entityType: role === 'buyer' ? entityType : null,
                 language: i18n.language,
-                verified: true,
-                createdAt: new Date().toISOString()
+                verified: true
             });
 
         } catch (err) {
             console.error(err);
-            setError(`Login failed: ${err.code || err.message}`);
+            setError(`Login failed: ${err.message}`);
         } finally {
             setLoading(false);
         }

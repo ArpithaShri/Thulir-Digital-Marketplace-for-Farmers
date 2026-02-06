@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { SCHEMES, ADVISORY_MESSAGES } from '../../data/advisoryData';
+import { getEligibleSchemes, getRelevantAdvisories } from '../../services/advisoryService';
 
 const FinancialAdvisory = ({ userData, listings = [] }) => {
     // Determine unique crops from listings
@@ -12,22 +12,12 @@ const FinancialAdvisory = ({ userData, listings = [] }) => {
 
     // Rule-Based Eligibility Engine
     const eligibleSchemes = useMemo(() => {
-        return SCHEMES.filter(scheme => {
-            const matchesState = scheme.eligibleStates.includes('Any') ||
-                scheme.eligibleStates.some(state => farmerLocation.includes(state));
-
-            const matchesCrop = scheme.eligibleCrops.includes('Any') ||
-                scheme.eligibleCrops.some(crop => farmerCrops.includes(crop.toLowerCase()));
-
-            return matchesState && (scheme.eligibleCrops.includes('Any') || farmerCrops.length > 0 ? matchesCrop : false);
-        });
+        return getEligibleSchemes(farmerLocation, farmerCrops);
     }, [farmerCrops, farmerLocation]);
 
     // Advisory Logic
     const relevantAdvisories = useMemo(() => {
-        return ADVISORY_MESSAGES.filter(adv => {
-            return adv.crop === 'Any' || farmerCrops.includes(adv.crop.toLowerCase());
-        });
+        return getRelevantAdvisories(farmerCrops);
     }, [farmerCrops]);
 
     return (

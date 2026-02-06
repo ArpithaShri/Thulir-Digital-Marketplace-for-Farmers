@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { useTranslation } from 'react-i18next';
+import { getPriceHistory, getPricePrediction } from '../services/priceService';
 
 export default function PriceIntelligence() {
     const { t } = useTranslation();
@@ -8,6 +9,7 @@ export default function PriceIntelligence() {
     const [history, setHistory] = useState([]);
     const [prediction, setPrediction] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const crops = ['Rice', 'Wheat', 'Tomato'];
 
@@ -17,18 +19,16 @@ export default function PriceIntelligence() {
 
     const fetchInsights = async () => {
         setLoading(true);
+        setError(null);
         try {
-            // Fetch history
-            const histRes = await fetch(`http://localhost:5000/price-history?crop=${selectedCrop}`);
-            const histData = await histRes.json();
+            const histData = await getPriceHistory(selectedCrop);
             setHistory(histData);
 
-            // Fetch prediction
-            const predRes = await fetch(`http://localhost:5000/price-predict?crop=${selectedCrop}`);
-            const predData = await predRes.json();
+            const predData = await getPricePrediction(selectedCrop);
             setPrediction(predData);
         } catch (err) {
             console.error("Failed to fetch price intelligence:", err);
+            setError("Unable to connect to Price Intelligence service. Make sure the backend is running.");
         } finally {
             setLoading(false);
         }
@@ -52,6 +52,12 @@ export default function PriceIntelligence() {
             {loading ? (
                 <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <div className="loader"></div>
+                </div>
+            ) : error ? (
+                <div style={{ height: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px', textAlign: 'center' }}>
+                    <span style={{ fontSize: '2rem', marginBottom: '10px' }}>⚠️</span>
+                    <p style={{ color: '#ef4444', fontSize: '0.9rem' }}>{error}</p>
+                    <button className="btn btn-secondary" onClick={fetchInsights} style={{ marginTop: '10px', width: 'auto' }}>Retry</button>
                 </div>
             ) : (
                 <div className="intelligence-content">

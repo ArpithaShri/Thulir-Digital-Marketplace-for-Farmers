@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { db, auth } from '../firebase';
-import { collection, query, where, onSnapshot, doc, deleteDoc, updateDoc, orderBy } from 'firebase/firestore';
+import { subscribeToMyListings, deleteListing, updateListingStatus, closeAuction } from '../services/listingService';
+import { subscribeToAllDemands } from '../services/demandService';
 import { useTranslation } from 'react-i18next';
 import CropListingForm from './CropListingForm';
 import VerificationBadge from './trust/VerificationBadge';
@@ -14,23 +15,24 @@ export default function FarmerDashboard({ userData }) {
     const [showForm, setShowForm] = useState(false);
     const [activeTab, setActiveTab] = useState('inventory'); // 'inventory' or 'demands'
     const [disputeItem, setDisputeItem] = useState(null); // Item being reported
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         if (!auth.currentUser) return;
 
+        setLoading(true);
+        setError(null);
+
         // Fetch My Listings
-        const qList = query(
-            collection(db, 'listings'),
-            where('farmerId', '==', auth.currentUser.uid)
-        );
-        const unsubList = onSnapshot(qList, (snap) => {
-            setListings(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        const unsubList = subscribeToMyListings(auth.currentUser.uid, (data) => {
+            setListings(data);
+            setLoading(false);
         });
 
         // Fetch Global Buyer Demands
-        const qDemands = query(collection(db, 'demands'), orderBy('createdAt', 'desc'));
-        const unsubDemands = onSnapshot(qDemands, (snap) => {
-            setDemands(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        const unsubDemands = subscribeToAllDemands((data) => {
+            setDemands(data);
         });
 
         return () => { unsubList(); unsubDemands(); };
@@ -38,18 +40,30 @@ export default function FarmerDashboard({ userData }) {
 
     const handleDelete = async (id) => {
         if (window.confirm("Remove this listing?")) {
-            await deleteDoc(doc(db, 'listings', id));
+            try {
+                await deleteListing(id);
+            } catch (err) {
+                alert("Failed to delete listing.");
+            }
         }
     };
 
     const toggleStatus = async (item) => {
         const newStatus = item.status === 'available' ? 'sold' : 'available';
-        await updateDoc(doc(db, 'listings', item.id), { status: newStatus });
+        try {
+            await updateListingStatus(item.id, newStatus);
+        } catch (err) {
+            alert("Failed to update status.");
+        }
     };
 
-    const closeAuction = async (id) => {
+    const handleCloseAuction = async (id) => {
         if (window.confirm("Stop bidding and close this auction?")) {
-            await updateDoc(doc(db, 'listings', id), { auctionActive: false });
+            try {
+                await closeAuction(id);
+            } catch (err) {
+                alert("Failed to close auction.");
+            }
         }
     };
 
@@ -143,7 +157,7 @@ export default function FarmerDashboard({ userData }) {
                                             </div>
                                             <div className="item-actions">
                                                 {item.auctionActive && (
-                                                    <button onClick={() => closeAuction(item.id)} className="btn-icon" title="Close Auction">🔨</button>
+                                                    <button onClick={() => handleCloseAuction(item.id)} className="btn-icon" title="Close Auction">🔨</button>
                                                 )}
                                                 <button onClick={() => toggleStatus(item)} className="btn-icon">
                                                     {item.status === 'available' ? '✅' : '🔄'}

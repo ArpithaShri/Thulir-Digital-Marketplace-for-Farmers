@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { db, auth } from '../../firebase';
-import { collection, query, where, onSnapshot, doc, updateDoc, orderBy } from 'firebase/firestore';
+import { auth } from '../../firebase';
+import { subscribeToDisputes, resolveDispute } from '../../services/disputeService';
 
 const DisputesList = ({ isAdmin = false }) => {
     const [disputes, setDisputes] = useState([]);
@@ -9,33 +9,18 @@ const DisputesList = ({ isAdmin = false }) => {
     useEffect(() => {
         if (!auth.currentUser) return;
 
-        let q;
-        if (isAdmin) {
-            // Mock Admin: Show all disputes
-            q = query(collection(db, 'disputes'), orderBy('createdAt', 'desc'));
-        } else {
-            // User: Show only their reported disputes
-            q = query(
-                collection(db, 'disputes'),
-                where('reportedBy', '==', auth.currentUser.uid),
-                orderBy('createdAt', 'desc')
-            );
-        }
-
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            setDisputes(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        setLoading(true);
+        const unsubscribe = subscribeToDisputes(isAdmin, auth.currentUser.uid, (data) => {
+            setDisputes(data);
             setLoading(false);
         });
 
         return () => unsubscribe();
     }, [isAdmin]);
 
-    const resolveDispute = async (id) => {
+    const handleResolve = async (id) => {
         try {
-            await updateDoc(doc(db, 'disputes', id), {
-                status: 'RESOLVED',
-                resolvedAt: new Date()
-            });
+            await resolveDispute(id);
         } catch (err) {
             console.error("Error resolving dispute:", err);
             alert("Failed to resolve dispute.");
@@ -76,7 +61,7 @@ const DisputesList = ({ isAdmin = false }) => {
                                 </div>
                                 {isAdmin && dispute.status === 'OPEN' && (
                                     <button
-                                        onClick={() => resolveDispute(dispute.id)}
+                                        onClick={() => handleResolve(dispute.id)}
                                         className="btn btn-primary"
                                         style={{ fontSize: '0.8rem', padding: '6px 12px', width: 'auto' }}
                                     >

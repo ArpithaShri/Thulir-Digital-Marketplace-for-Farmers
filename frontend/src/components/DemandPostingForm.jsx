@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { db, auth } from '../firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { auth } from '../firebase';
+import { createDemand } from '../services/demandService';
 import { useTranslation } from 'react-i18next';
 
 export default function DemandPostingForm({ userData, onComplete }) {
@@ -15,7 +15,7 @@ export default function DemandPostingForm({ userData, onComplete }) {
         e.preventDefault();
         setLoading(true);
         try {
-            await addDoc(collection(db, 'demands'), {
+            await createDemand({
                 buyerId: auth.currentUser.uid,
                 buyerName: userData.name,
                 buyerVerified: userData.verified !== false,
@@ -23,9 +23,7 @@ export default function DemandPostingForm({ userData, onComplete }) {
                 cropType: crop,
                 quantity: quantity,
                 urgency: urgency,
-                targetPrice: targetPrice,
-                status: 'open',
-                createdAt: serverTimestamp()
+                targetPrice: targetPrice
             });
             setCrop('');
             setQuantity('');
@@ -33,7 +31,7 @@ export default function DemandPostingForm({ userData, onComplete }) {
             if (onComplete) onComplete();
         } catch (err) {
             console.error("Demand posting error:", err);
-            alert("Failed to post demand.");
+            alert("Failed to post demand. " + err.message);
         } finally {
             setLoading(false);
         }

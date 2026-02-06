@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { auth, db } from '../firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { auth } from '../firebase';
+import { getUserData } from '../services/userService';
 import { useTranslation } from 'react-i18next';
 import FarmerDashboard from './FarmerDashboard';
 import BuyerDashboard from './BuyerDashboard';
@@ -18,10 +18,9 @@ export default function Dashboard({ user }) {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const docRef = doc(db, 'users', user.uid);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    setUserData(docSnap.data());
+                const data = await getUserData(user.uid);
+                if (data) {
+                    setUserData(data);
                 }
             } catch (err) {
                 console.error("Error fetching user data:", err);
